@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane stylesheets="@/Styles/staffregisterstyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Maintenix.Staff.StaffRegistrationController" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <children>
+        <!-- Main Container -->
+        <HBox prefHeight="600.0" prefWidth="1000.0" styleClass="main-container" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <!-- Left Side -->
+                <VBox prefHeight="600.0" styleClass="left-container" HBox.hgrow="ALWAYS">
+                    <children>
+                        <!-- Logo -->
+                        <HBox alignment="CENTER_LEFT" prefHeight="80.0" styleClass="logo-container">
+                            <children>
+                                <ImageView fitWidth="100" fitHeight="150"  pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@/images/logo.png" />
+                                    </image>
+                                </ImageView>
+
+                            </children>
+                        </HBox>
+
+                        <!-- Tool Image -->
+                        <HBox alignment="CENTER" prefHeight="350.0">
+                            <children>
+                                <ImageView fitHeight="300.0" fitWidth="350.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@/images/staff register.png" />
+                                    </image>
+                                </ImageView>
+                            </children>
+                        </HBox>
+
+                        <!-- Welcome Text -->
+                        <HBox alignment="CENTER_LEFT" prefHeight="170.0" styleClass="welcome-container">
+                            <children>
+                                <Label styleClass="welcome-text" text="Welcome!" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <!-- Right Side - Sign Up Form -->
+                <VBox prefHeight="600.0" styleClass="right-container" HBox.hgrow="ALWAYS">
+                    <children>
+                        <!-- Sign Up Title -->
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" styleClass="title-container">
+                            <children>
+                                <Label styleClass="signup-title" text="Sign up" />
+                            </children>
+                        </HBox>
+
+                        <!-- Form Container -->
+                        <VBox prefHeight="500.0" spacing="15.0" styleClass="form-container">
+                            <children>
+                                <!-- Username and Department Row -->
+                                <HBox spacing="15.0">
+                                    <children>
+                                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label styleClass="field-label" text="Username" />
+                                                <TextField fx:id="usernameField" prefHeight="40.0" styleClass="input-field" />
+                                            </children>
+                                        </VBox>
+                                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label styleClass="field-label" text="Department" />
+                                                <ComboBox fx:id="departmentCombo" prefHeight="40.0" prefWidth="200.0" styleClass="combo-field" />
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+
+                                <!-- Full Name -->
+                                <VBox spacing="5.0">
+                                    <children>
+                                        <Label styleClass="field-label" text="Full Name" />
+                                        <TextField fx:id="fullNameField" prefHeight="40.0" styleClass="input-field" />
+                                    </children>
+                                </VBox>
+
+                                <!-- Email Address -->
+                                <VBox spacing="5.0">
+                                    <children>
+                                        <Label styleClass="field-label" text="Email Address" />
+                                        <TextField fx:id="emailField" prefHeight="40.0" styleClass="input-field" />
+                                    </children>
+                                </VBox>
+
+                                <!-- Password Row -->
+                                <HBox spacing="15.0">
+                                    <children>
+                                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label styleClass="field-label" text="Password" />
+                                                <HBox styleClass="password-container">
+                                                    <children>
+                                                        <PasswordField fx:id="passwordField" prefHeight="40.0" styleClass="password-field" HBox.hgrow="ALWAYS" />
+                                                        <Button fx:id="showPasswordBtn1"  prefHeight="40.0" prefWidth="40.0" styleClass="eye-button" text="👁">
+                                                        </Button>
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label styleClass="field-label" text="Confirm Password" />
+                                                <HBox styleClass="password-container">
+                                                    <children>
+                                                        <PasswordField fx:id="confirmPasswordField" prefHeight="40.0" styleClass="password-field" HBox.hgrow="ALWAYS" />
+                                                        <Button fx:id="showPasswordBtn2"  prefHeight="40.0" prefWidth="40.0" styleClass="eye-button" text="👁">
+                                                        </Button>
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+
+                                <!-- Create Account Button -->
+                                <Button fx:id="createAccountBtn" onAction="#createAccount" prefHeight="45.0" styleClass="create-account-btn" text="Create Account" />
+
+                                <!-- OR Separator -->
+                                <HBox alignment="CENTER" spacing="10.0" styleClass="separator-container">
+                                    <children>
+                                        <Separator prefWidth="120.0" />
+                                        <Label styleClass="or-text" text="Or" />
+                                        <Separator prefWidth="120.0" />
+                                    </children>
+                                </HBox>
+
+                                <!-- Log In Button -->
+                                <Button fx:id="loginBtn" onAction="#login" prefHeight="45.0" styleClass="login-btn" text="Log in" />
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+    </children>
+</AnchorPane>

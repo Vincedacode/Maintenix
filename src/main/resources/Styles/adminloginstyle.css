@@ -1,0 +1,75 @@
+.logo{
+-fx-margin-left: 50px
+}
+.login-root {
+    -fx-background-color: #f8f9ff;
+}
+
+.login-left {
+    -fx-padding: 50 0 0 100;
+    -fx-pref-width:650;
+    -fx-background-color:#F5F5F5;
+
+}
+
+.app-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1E3A8A;
+}
+
+.subtitle {
+    -fx-font-size: 16px;
+   -fx-text-fill: #1E3A8A;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 0 0;
+}
+
+.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #1E3A8A;
+    -fx-padding: 10 0 5 0;
+    -fx-font-weight: bold;
+}
+
+.input {
+     -fx-position: absolute;
+    -fx-pref-width: 300 ;
+    -fx-max-width: 300;
+    -fx-pref-height: 40;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #2563EB;
+    -fx-font-size: 14px;
+    -fx-padding: 0 10;
+}
+
+.login-btn {
+    -fx-background-color: #1E3A8A;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-pref-width: 300;
+    -fx-pref-height: 45;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+
+.login-btn:hover {
+     -fx-background-color: #2563EB;
+}
+
+
+.back{
+ -fx-background-color: #1E3A8A;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-pref-width: 70;
+    -fx-pref-height: 30;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+.back:hover{
+-fx-background-color: #2563EB;
+}

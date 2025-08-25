@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane stylesheets="@/Styles/adminloginstyle.css" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.Maintenix.Admin.AdminLoginController" styleClass="login-root">
+
+    <!-- Left Section -->
+    <left>
+        <VBox alignment="CENTER_LEFT" spacing="15" styleClass="login-left">
+            <ImageView styleClass="logo" fx:id="logo" fitWidth="100" fitHeight="150" preserveRatio="true"/>
+            <Label text="ADMIN LOGIN" styleClass="subtitle"/>
+
+            <Label text="Email" styleClass="label"/>
+            <TextField fx:id="emailField" promptText="Enter your email" styleClass="input"/>
+
+            <Label text="Password" styleClass="label"/>
+            <PasswordField fx:id="passwordField" promptText="Enter your password" styleClass="input"/>
+
+
+            <Button text="Log in" fx:id="loginBtn" styleClass="login-btn"/>
+
+
+
+
+
+            <!-- Back button in a separate HBox aligned to the right -->
+            <HBox alignment="CENTER_RIGHT" style="-fx-padding: 0 40 0 0;">
+                <Button fx:id="backLink" styleClass="back" text="Back" onAction="#handleBackClick">
+                    <VBox.margin>
+                        <Insets right="250" />
+                    </VBox.margin>
+                </Button>
+            </HBox>
+        </VBox>
+    </left>
+
+
+    <!-- Right Section -->
+    <center>
+        <ImageView fx:id="illustration" fitWidth="450" preserveRatio="true"/>
+    </center>
+
+</BorderPane>

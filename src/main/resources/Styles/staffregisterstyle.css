@@ -1,0 +1,190 @@
+/* Main Container */
+.main-container {
+    -fx-background-color: #f0f0f0;
+}
+
+/* Left Side Styling */
+.left-container {
+    -fx-background-color: white;
+    -fx-padding: 40 50 40 50;
+}
+
+.logo-container {
+    -fx-padding: 0 0 20 0;
+}
+
+.logo-text {
+    -fx-font-family: "System Bold";
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c5aa0;
+    -fx-padding: 0 0 0 10;
+}
+
+.welcome-container {
+    -fx-padding: 30 0 0 0;
+}
+
+.welcome-text {
+    -fx-font-family: "System Bold";
+    -fx-font-size: 48px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c5aa0;
+}
+
+/* Right Side Styling */
+.right-container {
+    -fx-background-color: #f0f0f0;
+    -fx-padding: 40 50 40 50;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, -5, 0);
+}
+
+.title-container {
+    -fx-padding: 0 0 20 0;
+}
+
+.signup-title {
+    -fx-font-family: "System Bold";
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+.form-container {
+    -fx-padding: 20 0 0 0;
+}
+
+/* Field Labels */
+.field-label {
+    -fx-font-family: "System";
+    -fx-font-size: 12px;
+    -fx-text-fill: #666666;
+    -fx-font-weight: normal;
+}
+
+/* Input Fields */
+.input-field {
+    -fx-background-color: #f5f5f5;
+    -fx-border-color: #f5f5f5;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 10px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+}
+
+.input-field:focused {
+    -fx-border-color: #2c5aa0;
+    -fx-border-width: 2px;
+}
+
+/* ComboBox Styling */
+.combo-field {
+    -fx-background-color: #f5f5f5;
+    -fx-border-color: #f5f5f5;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+}
+
+.combo-field .list-cell {
+    -fx-padding: 10px;
+    -fx-font-size: 14px;
+}
+
+.combo-field:focused {
+    -fx-border-color: #2c5aa0;
+    -fx-border-width: 2px;
+}
+
+/* Password Container */
+.password-container {
+    -fx-background-color: #f5f5f5;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+}
+
+.password-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 10px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+}
+
+.password-field:focused {
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+}
+
+.password-container:focused-within {
+    -fx-border-color: #2c5aa0;
+    -fx-border-width: 2px;
+}
+
+/* Eye Button */
+.eye-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+}
+
+.eye-button:hover {
+    -fx-background-color: rgba(44, 90, 160, 0.1);
+    -fx-background-radius: 3px;
+}
+
+/* Create Account Button */
+.create-account-btn {
+    -fx-background-color: #2c5aa0;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+    -fx-padding: 12px;
+}
+
+.create-account-btn:hover {
+    -fx-background-color: #245290;
+}
+
+.create-account-btn:pressed {
+    -fx-background-color: #1e4680;
+}
+
+/* OR Separator */
+.separator-container {
+    -fx-padding: 15 0 15 0;
+}
+
+.separator-container .separator {
+    -fx-background-color: #e0e0e0;
+}
+
+.or-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: #999999;
+    -fx-padding: 0 10 0 10;
+}
+
+/* Login Button */
+.login-btn {
+    -fx-background-color: #e8e8e8;
+    -fx-text-fill: #666666;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+    -fx-padding: 12px;
+}
+
+.login-btn:hover {
+    -fx-background-color: #d8d8d8;
+}
+
+.login-btn:pressed {
+    -fx-background-color: #c8c8c8;
+}

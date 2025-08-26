@@ -12,6 +12,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
 
+import org.bson.Document;
+import org.example.Maintenix.DAO.staffdao;
+
 public class StaffLoginController {
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField;
@@ -32,6 +35,7 @@ public class StaffLoginController {
 
         signup_link.setOnAction(e->{
             try {
+                showAlert("Info", "Redirecting to register page...");
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/StaffRegistration.fxml"));
                 Parent root = loader.load();
                 Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
@@ -47,29 +51,63 @@ public class StaffLoginController {
             String password = passwordField.getText();
             String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
 
-            if(email.isEmpty() || password.isEmpty()){
-                showErrorAlert("Input Error", "Please fill all required fields.");
+            if(email.trim().isEmpty()){
+                showAlert("Validation Error", "Please enter email.");
+                emailField.requestFocus();
                 return;
             }
             if(!email.matches(emailRegex)){
-                showErrorAlert("Invalid Email", "Please enter a valid email!");
+                showAlert("Invalid Email", "Please enter a valid email!");
+                emailField.requestFocus();
                 return;
             }
-            if(password.length() < 8 || password.length() > 16){
-                showErrorAlert("Invalid Password", "Password length must be 8-16 characters.");
+            if(password.trim().isEmpty()){
+                showAlert("Validation Error", "Please enter password.");
+                passwordField.requestFocus();
                 return;
             }
 
-            showSuccessAlert("", "Login Successful!");
-            System.out.println("Login Successful!");
-            emailField.clear();
-            passwordField.clear();
+            if(password.length() < 8 || password.length() > 16){
+                showAlert("Invalid Password", "Password length must be 8-16 characters.");
+                passwordField.requestFocus();
+                return;
+            }
+
+            try{
+                staffdao dbdao = new staffdao();
+                Document staffDoc = dbdao.loginStaff(email,password);
+                if(staffDoc != null){
+                    String username = staffDoc.getString("Username");
+                    showAlert("Success", "Login Successful!");
+                    emailField.clear();
+                    passwordField.clear();
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/StaffDashboard.fxml"));
+                        Parent root = loader.load();
+                        StaffDashboardController controller = loader.getController();
+                        controller.setUsername(username);
+                        Stage stage = (Stage) loginBtn.getScene().getWindow();
+                        stage.setScene(new Scene(root));
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    return;
+                }else {
+                    showAlert("Invalid Login Details", "Account not found!");
+                    return;
+                }
+            }catch (Exception ex){
+                System.out.println(ex.getMessage());
+            }
+
+
         });
     }
 
     @FXML
     private void handleBackClick() {
         try {
+            showAlert("Info", "Redirecting to home page...");
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/View.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) backLink.getScene().getWindow();
@@ -80,26 +118,14 @@ public class StaffLoginController {
         }
     }
 
-    private void showErrorAlert(String title,String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    private void showWarningAlert(String title,String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(title);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    private void showSuccessAlert(String title,String message) {
+    private void showAlert(String title,String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+
 
 
 }

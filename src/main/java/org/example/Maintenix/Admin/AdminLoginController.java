@@ -11,6 +11,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
 
+import org.bson.Document;
+import org.example.Maintenix.DAO.admindao;
+
 public class AdminLoginController {
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField;
@@ -32,29 +35,54 @@ public class AdminLoginController {
             String password = passwordField.getText();
             String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
 
-            if(email.isEmpty() || password.isEmpty()){
-                showErrorAlert("Input Error", "Please fill all required fields.");
-                return;
-            }
-            if(!email.matches(emailRegex)){
-                showErrorAlert("Invalid Email", "Please enter a valid email!");
-                return;
-            }
-            if(password.length() < 8 || password.length() > 16){
-                showErrorAlert("Invalid Password", "Password length must be 8-16 characters.");
+            if(email.trim().isEmpty() ){
+                showAlert("Validation Error", "Please enter email.");
+                emailField.requestFocus();
                 return;
             }
 
-            showSuccessAlert("", "Login Successful!");
-            System.out.println("Login Successful!");
-            emailField.clear();
-            passwordField.clear();
+            if(!email.matches(emailRegex)){
+                showAlert("Invalid Email", "Please enter a valid email!");
+                return;
+            }
+
+            if(password.trim().isEmpty() ){
+                showAlert("Validation Error", "Please enter password.");
+                passwordField.requestFocus();
+                return;
+            }
+
+            if(password.trim().length() < 8 || password.trim().length() > 16){
+                showAlert("Invalid Password", "Password length must be 8-16 characters.");
+                return;
+            }
+
+            try {
+                admindao dbdao = new admindao();
+               Document adminDoc = dbdao.loginAdmin(email,password);
+               if(adminDoc != null){
+                   showAlert("Success", "Login Successful!");
+                   emailField.clear();
+                   passwordField.clear();
+                   return;
+               }else {
+                   showAlert("Invalid Login Details", "Account not found!");
+                   return;
+               }
+
+            }catch (Exception ex){
+                System.out.println(ex.getMessage());
+            }
+
+
+
         });
     }
 
     @FXML
     private void handleBackClick() {
         try {
+            showAlert("Info", "Redirecting to home page...");
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/View.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) backLink.getScene().getWindow();
@@ -65,21 +93,11 @@ public class AdminLoginController {
         }
     }
 
-    private void showErrorAlert(String title,String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
 
-    private void showWarningAlert(String title,String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(title);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
 
-    private void showSuccessAlert(String title,String message) {
+
+
+    private void showAlert(String title,String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setContentText(message);

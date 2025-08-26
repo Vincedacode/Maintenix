@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import org.example.Maintenix.DAO.staffdao;
 
 public class StaffRegistrationController implements Initializable {
 
@@ -163,15 +164,20 @@ public class StaffRegistrationController implements Initializable {
             System.out.println("Department: " + department);
             System.out.println("Full Name: " + fullName);
             System.out.println("Email: " + email);
+            try {
+                staffdao dbdao = new staffdao();
+                dbdao.registerStaff(username,department,fullName,email,password);
+                showAlert("Success", "Account created successfully!");
+                clearForm();
+            }catch (Exception e){
+                System.out.println(e.getMessage());
+            }
 
-            showAlert("Success", "Account created successfully!");
-            clearForm();
         }
     }
 
     @FXML
     private void login() {
-        System.out.println("Redirecting to login...");
         showAlert("Info", "Redirecting to login page...");
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/StaffLogin.fxml"));
@@ -185,6 +191,7 @@ public class StaffRegistrationController implements Initializable {
     }
 
     private boolean validateForm() {
+        staffdao dbdao = new staffdao();
         if (usernameField.getText().trim().isEmpty()) {
             showAlert("Validation Error", "Please enter a username.");
             usernameField.requestFocus();
@@ -215,14 +222,33 @@ public class StaffRegistrationController implements Initializable {
             return false;
         }
 
+        if(dbdao.checkStaffEmail(emailField.getText().trim())){
+            showAlert("Duplicate Email", "Email already exists!");
+            emailField.requestFocus();
+            return false;
+        }
+
         if (passwordField.getText().isEmpty()) {
             showAlert("Validation Error", "Please enter a password.");
             passwordField.requestFocus();
             return false;
         }
 
+        if(passwordField.getText().length() < 8 || passwordField.getText().length() > 16){
+            showAlert("Validation Error", "Password length must be 8-16 characters.");
+            passwordField.requestFocus();
+            return false;
+        }
+
+
         if (confirmPasswordField.getText().isEmpty()) {
             showAlert("Validation Error", "Please confirm your password.");
+            confirmPasswordField.requestFocus();
+            return false;
+        }
+
+        if(confirmPasswordField.getText().length() < 8 || confirmPasswordField.getText().length() > 16){
+            showAlert("Validation Error", "Password length must be 8-16 characters.");
             confirmPasswordField.requestFocus();
             return false;
         }

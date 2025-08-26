@@ -1,0 +1,222 @@
+/* Root styling */
+.root {
+    -fx-background-color: #f5f5f5;
+    -fx-font-family: "Segoe UI", "Helvetica", "Arial", sans-serif;
+}
+
+/* Sidebar */
+.sidebar {
+    -fx-background-color: white;
+    -fx-min-width: 250px;
+    -fx-max-width: 250px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 2, 0);
+}
+
+.logo-section {
+    -fx-spacing: 10px;
+}
+
+.logo-text {
+    -fx-text-fill: #2563eb;
+    -fx-font-weight: bold;
+}
+
+.nav-menu {
+    -fx-spacing: 8px;
+}
+
+.nav-item {
+     -fx-background-color: transparent;
+     -fx-text-fill: #6b7280;
+     -fx-font-size: 16px;
+     -fx-alignment: CENTER_LEFT;
+     -fx-padding: 12px 16px;
+     -fx-background-radius: 8px;
+     -fx-border-color: transparent;
+     -fx-cursor: hand;
+     -fx-min-width: 200px;
+ }
+.nav-item2 {
+    -fx-background-color: transparent;
+    -fx-text-fill: #6b7280;
+    -fx-font-size: 16px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 12px 16px;
+    -fx-background-radius: 8px;
+    -fx-border-color: transparent;
+
+    -fx-min-width: 200px;
+}
+.nav-item:hover {
+    -fx-background-color: #f3f4f6;
+    -fx-text-fill: #374151;
+}
+
+.nav-active {
+    -fx-background-color: #dbeafe;
+    -fx-text-fill: #2563eb;
+}
+
+/* Main Content */
+.main-content {
+    -fx-background-color: #f9fafb;
+}
+
+.header {
+    -fx-spacing: 20px;
+}
+
+.page-title {
+    -fx-text-fill: #111827;
+    -fx-font-weight: bold;
+}
+
+.welcome-text {
+    -fx-text-fill: #6b7280;
+    -fx-font-size: 16px;
+}
+
+.report-btn {
+    -fx-background-color: #7f1d1d;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 12px 24px;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+}
+
+.report-btn:hover {
+    -fx-background-color: #991b1b;
+}
+
+/* Cards Grid */
+.cards-grid {
+    -fx-hgap: 20px;
+    -fx-vgap: 20px;
+}
+
+.status-card {
+    -fx-background-radius: 12px;
+    -fx-padding: 24px;
+    -fx-min-height: 150px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);
+}
+
+.card-title {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.card-status-label {
+    -fx-text-fill: rgba(255,255,255,0.8);
+    -fx-font-size: 14px;
+    -fx-margin-top: 20px;
+}
+
+.card-status {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.card-icon {
+    -fx-opacity: 0.8;
+}
+
+/* Printer Card */
+.printer-card {
+    -fx-background-color: #7f1d1d;
+}
+
+/* Monitor Card */
+.monitor-card {
+    -fx-background-color: #ca8a04;
+}
+
+/* Desk Lamp Card */
+.desk-lamp-card {
+    -fx-background-color: #047857;
+}
+
+/* Updates Card */
+.updates-card {
+    -fx-background-color: #1e293b;
+    -fx-alignment: TOP_LEFT;
+}
+
+.updates-card .card-title {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+}
+
+.update-content {
+    -fx-spacing: 8px;
+    -fx-alignment: CENTER;
+}
+
+.update-text {
+    -fx-text-fill: #3b82f6;
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+}
+
+.update-time {
+    -fx-text-fill: rgba(255,255,255,0.7);
+    -fx-font-size: 12px;
+}
+
+.update-action {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+/* AC and Fan Card */
+.ac-fan-card {
+    -fx-background-color: #1E3A8A;
+}
+
+.control-label {
+    -fx-text-fill: rgba(255,255,255,0.9);
+    -fx-font-size: 14px;
+}
+
+.control-status {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+    -fx-min-width: 50px;
+    -fx-min-height: 25px;
+    -fx-max-width: 50px;
+    -fx-max-height: 25px;
+    -fx-background-radius: 15px;
+}
+
+.toggle-on {
+    -fx-background-color: #22c55e;
+}
+
+.toggle-off {
+    -fx-background-color: #6b7280;
+}
+
+.eco-icon {
+    -fx-opacity: 0.8;
+}
+.request-btn{
+ -fx-background-color: #d8d8d8;
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 25;
+    -fx-cursor: hand;
+}
+.request-btn:hover{
+ -fx-background-color: #d8d8d8;
+}
+
+

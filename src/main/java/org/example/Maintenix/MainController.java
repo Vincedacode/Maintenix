@@ -39,7 +39,7 @@ public class MainController {
 
         staffBtn.setOnAction(e -> {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/StaffLogin.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/MaintenaceRequest.fxml"));
                 Parent root = loader.load();
                 Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
                 stage.setScene(new Scene(root));

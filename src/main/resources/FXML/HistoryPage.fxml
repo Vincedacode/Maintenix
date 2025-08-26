@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane stylesheets="@/Styles/historystyle.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Maintenix.Staff.HistoryController">
+    <left>
+        <VBox styleClass="sidebar" BorderPane.alignment="CENTER">
+            <children>
+                <!-- Logo Section -->
+                <HBox styleClass="logo-section" alignment="CENTER_LEFT">
+                    <children>
+                        <ImageView fitHeight="100" fitWidth="150" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/logo.png" />
+                            </image>
+                        </ImageView>
+                        <Label styleClass="logo-text" text="">
+                            <font>
+                                <Font name="System Bold" size="18.0" />
+                            </font>
+                        </Label>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="30.0" />
+                    </VBox.margin>
+                </HBox>
+
+                <!-- Navigation Menu -->
+                <VBox styleClass="nav-menu" spacing="5.0">
+                    <children>
+                        <Button fx:id="dashboardBtn" styleClass="nav-item" text="📊 Overview" />
+                        <Button fx:id="devicesBtn" styleClass="nav-item" text="📱 Devices" />
+                        <Button fx:id="historyBtn" styleClass="nav-item,nav-active" text="📋 History" />
+                    </children>
+                </VBox>
+
+                <!-- Bottom Navigation -->
+                <Region VBox.vgrow="ALWAYS" />
+                <VBox spacing="5.0">
+                    <children>
+                        <Button fx:id="profileBtn" styleClass="nav-item" text="👤 My Profile" />
+                        <Button fx:id="signOutBtn" styleClass="nav-item" text="🚪 Sign Out" />
+                    </children>
+                </VBox>
+            </children>
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox styleClass="main-content" BorderPane.alignment="CENTER">
+            <children>
+                <!-- Header -->
+                <HBox styleClass="header" alignment="CENTER_LEFT">
+                    <children>
+                        <VBox HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label styleClass="page-title" text="History">
+                                    <font>
+                                        <Font name="System Bold" size="32.0" />
+                                    </font>
+                                </Label>
+                                <Label styleClass="welcome-text" text="Track your device maintenance history" />
+                            </children>
+                        </VBox>
+                        <HBox spacing="10.0">
+                            <children>
+                                <Button fx:id="filterBtn" styleClass="filter-btn" text="Filter" />
+                                <Button fx:id="exportBtn" styleClass="export-btn" text="Export" />
+                            </children>
+                        </HBox>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="30.0" />
+                    </VBox.margin>
+                </HBox>
+
+                <!-- History Table -->
+                <VBox styleClass="table-container">
+                    <children>
+                        <!-- Table Header -->
+                        <HBox styleClass="table-header">
+                            <children>
+                                <Label styleClass="header-cell,device-col" text="Device">
+                                    <font>
+                                        <Font name="System Bold" size="14.0" />
+                                    </font>
+                                </Label>
+                                <Label styleClass="header-cell,issue-col" text="Issue">
+                                    <font>
+                                        <Font name="System Bold" size="14.0" />
+                                    </font>
+                                </Label>
+                                <Label styleClass="header-cell,date-col" text="Date">
+                                    <font>
+                                        <Font name="System Bold" size="14.0" />
+                                    </font>
+                                </Label>
+                                <Label styleClass="header-cell,status-col" text="Status">
+                                    <font>
+                                        <Font name="System Bold" size="14.0" />
+                                    </font>
+                                </Label>
+                                <Label styleClass="header-cell,action-col" text="Action">
+                                    <font>
+                                        <Font name="System Bold" size="14.0" />
+                                    </font>
+                                </Label>
+                            </children>
+                        </HBox>
+
+                        <!-- Scrollable table content -->
+                        <ScrollPane styleClass="table-scroll" fitToWidth="true" VBox.vgrow="ALWAYS">
+                            <content>
+                                <VBox fx:id="historyTableBody" styleClass="table-body">
+                                    <!-- Table rows will be dynamically added here -->
+                                </VBox>
+                            </content>
+                        </ScrollPane>
+                    </children>
+                </VBox>
+            </children>
+            <padding>
+                <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+            </padding>
+        </VBox>
+    </center>
+</BorderPane>

@@ -1,35 +1,37 @@
 package org.example.Maintenix.DAO;
 
 import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import io.github.cdimascio.dotenv.Dotenv;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.example.Maintenix.DBConnection;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-public class maintenancedao {
+public class maintenancereportdao {
 
     private MongoClient mongoClient;
     private MongoDatabase database;
-    private MongoCollection<Document> maintenanceCollection;
+    private MongoCollection<Document> reportsCollection;
     private MongoCollection<Document> staffCollection;
 
     // Constructor
-    public maintenancedao() {
+    public maintenancereportdao() {
         try {
-            // Replace with your MongoDB connection string
-            mongoClient = MongoClients.create("mongodb://localhost:27017");
-            database = mongoClient.getDatabase("maintenix"); // Replace with your database name
-            maintenanceCollection = database.getCollection("maintenance_requests");
-            staffCollection = database.getCollection("Staffs"); // Assuming your staff collection name
+
+            Dotenv dotenv = Dotenv.load();
+            String dbname = dotenv.get("DB_NAME");
+            String staffCollectionName = dotenv.get("STAFF_COLLECTION_NAME");
+            String reportsCollectionName = dotenv.get("REPORTS_COLLECTION_NAME");
+            this.staffCollection = DBConnection.createConnection(dbname,staffCollectionName);
+           this.reportsCollection = DBConnection.createConnection(dbname,reportsCollectionName);
+
         } catch (Exception e) {
             System.err.println("Error connecting to MongoDB: " + e.getMessage());
             e.printStackTrace();
@@ -40,7 +42,7 @@ public class maintenancedao {
      * Creates a new maintenance request with image
      */
     public boolean createMaintenanceRequest(String staffName, String issue, String location,
-                                            String status, String priority, String filename,
+                                            String filename,
                                             String contentType, String imageBase64) {
         try {
             // Get staff ObjectId by name
@@ -54,8 +56,8 @@ public class maintenancedao {
                     .append("staff_name", staffId)
                     .append("issue", issue)
                     .append("location", location)
-                    .append("status", status)
-                    .append("priority", priority)
+                    .append("status", "pending")
+                    .append("priority", "low")
                     .append("created_at", new Date());
 
             // Add image data if provided
@@ -67,7 +69,7 @@ public class maintenancedao {
                 maintenanceDoc.append("image", imageDoc);
             }
 
-            maintenanceCollection.insertOne(maintenanceDoc);
+            reportsCollection.insertOne(maintenanceDoc);
             System.out.println("Maintenance request created successfully");
             return true;
 
@@ -81,10 +83,6 @@ public class maintenancedao {
     /**
      * Creates a new maintenance request without image
      */
-    public boolean createMaintenanceRequest(String staffName, String issue, String location,
-                                            String status, String priority) {
-        return createMaintenanceRequest(staffName, issue, location, status, priority, null, null, null);
-    }
 
     /**
      * Get all staff names for dropdown
@@ -115,13 +113,12 @@ public class maintenancedao {
      */
     private ObjectId getStaffIdByName(String fullName) {
         try {
-            Document query = new Document("full_name", fullName);
+            Document query = new Document("Fullname", fullName); // Match case exactly
             Document staff = staffCollection.find(query).first();
 
             if (staff != null) {
                 return staff.getObjectId("_id");
             }
-
         } catch (Exception e) {
             System.err.println("Error finding staff by name: " + e.getMessage());
             e.printStackTrace();
@@ -129,6 +126,7 @@ public class maintenancedao {
 
         return null;
     }
+
 
     /**
      * Get all maintenance requests for a specific staff member
@@ -140,7 +138,7 @@ public class maintenancedao {
             ObjectId staffId = getStaffIdByName(staffName);
             if (staffId != null) {
                 Document query = new Document("staff_name", staffId);
-                requests = maintenanceCollection.find(query).into(new ArrayList<>());
+                requests = reportsCollection.find(query).into(new ArrayList<>());
             }
 
         } catch (Exception e) {
@@ -158,7 +156,7 @@ public class maintenancedao {
         List<Document> requests = new ArrayList<>();
 
         try {
-            requests = maintenanceCollection.find().into(new ArrayList<>());
+            requests = reportsCollection.find().into(new ArrayList<>());
 
         } catch (Exception e) {
             System.err.println("Error retrieving all maintenance requests: " + e.getMessage());
@@ -176,7 +174,7 @@ public class maintenancedao {
             Document query = new Document("_id", requestId);
             Document update = new Document("$set", new Document("status", newStatus));
 
-            long modifiedCount = maintenanceCollection.updateOne(query, update).getModifiedCount();
+            long modifiedCount = reportsCollection.updateOne(query, update).getModifiedCount();
 
             if (modifiedCount > 0) {
                 System.out.println("Maintenance request status updated successfully");
@@ -201,7 +199,7 @@ public class maintenancedao {
             Document query = new Document("_id", requestId);
             Document update = new Document("$set", new Document("priority", newPriority));
 
-            long modifiedCount = maintenanceCollection.updateOne(query, update).getModifiedCount();
+            long modifiedCount = reportsCollection.updateOne(query, update).getModifiedCount();
 
             if (modifiedCount > 0) {
                 System.out.println("Maintenance request priority updated successfully");
@@ -224,7 +222,7 @@ public class maintenancedao {
     public boolean deleteMaintenanceRequest(ObjectId requestId) {
         try {
             Document query = new Document("_id", requestId);
-            long deletedCount = maintenanceCollection.deleteOne(query).getDeletedCount();
+            long deletedCount = reportsCollection.deleteOne(query).getDeletedCount();
 
             if (deletedCount > 0) {
                 System.out.println("Maintenance request deleted successfully");
@@ -249,7 +247,7 @@ public class maintenancedao {
 
         try {
             Document query = new Document("status", status);
-            requests = maintenanceCollection.find(query).into(new ArrayList<>());
+            requests = reportsCollection.find(query).into(new ArrayList<>());
 
         } catch (Exception e) {
             System.err.println("Error retrieving maintenance requests by status: " + e.getMessage());
@@ -267,7 +265,7 @@ public class maintenancedao {
 
         try {
             Document query = new Document("priority", priority);
-            requests = maintenanceCollection.find(query).into(new ArrayList<>());
+            requests = reportsCollection.find(query).into(new ArrayList<>());
 
         } catch (Exception e) {
             System.err.println("Error retrieving maintenance requests by priority: " + e.getMessage());
@@ -303,7 +301,7 @@ public class maintenancedao {
     public boolean maintenanceRequestExists(ObjectId requestId) {
         try {
             Document query = new Document("_id", requestId);
-            Document request = maintenanceCollection.find(query).first();
+            Document request = reportsCollection.find(query).first();
             return request != null;
 
         } catch (Exception e) {
@@ -319,7 +317,7 @@ public class maintenancedao {
     public Document getMaintenanceRequestById(ObjectId requestId) {
         try {
             Document query = new Document("_id", requestId);
-            return maintenanceCollection.find(query).first();
+            return reportsCollection.find(query).first();
 
         } catch (Exception e) {
             System.err.println("Error retrieving maintenance request by ID: " + e.getMessage());

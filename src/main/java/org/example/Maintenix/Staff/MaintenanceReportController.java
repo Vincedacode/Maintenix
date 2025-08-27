@@ -17,13 +17,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.ResourceBundle;
-import org.example.Maintenix.DAO.maintenancedao;
+import org.example.Maintenix.DAO.maintenancereportdao;
 import org.example.Maintenix.DAO.staffdao;
 
-public class MaintenanceRequestController implements Initializable {
+public class MaintenanceReportController implements Initializable {
 
     @FXML
     private ComboBox<String> staffNameCombo;
@@ -34,11 +33,7 @@ public class MaintenanceRequestController implements Initializable {
     @FXML
     private TextArea issueArea;
 
-    @FXML
-    private ComboBox<String> priorityCombo;
 
-    @FXML
-    private ComboBox<String> statusCombo;
 
     @FXML
     private Button selectImageBtn;
@@ -50,10 +45,10 @@ public class MaintenanceRequestController implements Initializable {
     private ImageView imagePreview;
 
     @FXML
-    private Button submitRequestBtn;
+    private Button submitReportBtn;
 
     @FXML
-    private Button viewRequestsBtn;
+    private Button viewReportsBtn;
 
     // Image handling
     private File selectedImageFile;
@@ -62,37 +57,12 @@ public class MaintenanceRequestController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        setupComboBoxes();
+
         setupFormValidation();
         loadStaffNames();
     }
 
-    private void setupComboBoxes() {
-        // Priority options
-        ObservableList<String> priorities = FXCollections.observableArrayList(
-                "Low",
-                "Medium",
-                "High",
-                "Critical"
-        );
-        priorityCombo.setItems(priorities);
-        priorityCombo.setValue("Medium"); // Default value
 
-        // Status options
-        ObservableList<String> statuses = FXCollections.observableArrayList(
-                "Pending",
-                "In Progress",
-                "Resolved",
-                "Cancelled"
-        );
-        statusCombo.setItems(statuses);
-        statusCombo.setValue("Pending"); // Default value
-
-        // Set prompt texts
-        staffNameCombo.setPromptText("Select Staff Member");
-        priorityCombo.setPromptText("Select Priority");
-        statusCombo.setPromptText("Select Status");
-    }
 
     private void loadStaffNames() {
         try {
@@ -106,8 +76,8 @@ public class MaintenanceRequestController implements Initializable {
     }
 
     private void setupFormValidation() {
-        submitRequestBtn.setOnAction(event -> submitRequest());
-        viewRequestsBtn.setOnAction(event -> viewRequests());
+        submitReportBtn.setOnAction(event -> submitReport());
+        viewReportsBtn.setOnAction(event -> viewReports());
         selectImageBtn.setOnAction(event -> selectImage());
     }
 
@@ -163,29 +133,28 @@ public class MaintenanceRequestController implements Initializable {
     }
 
     @FXML
-    private void submitRequest() {
+    private void submitReport() {
         if (validateForm()) {
             try {
                 // Get form data
                 String staffName = staffNameCombo.getValue();
                 String location = locationField.getText().trim();
                 String issue = issueArea.getText().trim();
-                String priority = priorityCombo.getValue();
-                String status = statusCombo.getValue();
+
 
                 // Create maintenance request
-                maintenancedao dbdao = new maintenancedao();
+                maintenancereportdao dbdao = new maintenancereportdao();
 
                 // Submit request with or without image
                 boolean success;
                 if (selectedImageFile != null) {
                     success = dbdao.createMaintenanceRequest(
-                            staffName, issue, location, status, priority,
+                            staffName, issue, location,
                             selectedImageFile.getName(), imageContentType, imageBase64
                     );
                 } else {
                     success = dbdao.createMaintenanceRequest(
-                            staffName, issue, location, status, priority,
+                            staffName, issue, location,
                             null, null, null
                     );
                 }
@@ -205,12 +174,12 @@ public class MaintenanceRequestController implements Initializable {
     }
 
     @FXML
-    private void viewRequests() {
+    private void viewReports() {
         try {
             // Navigate to maintenance requests view page
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/MaintenanceRequestsView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/HistoryPage.fxml"));
             Parent root = loader.load();
-            Stage stage = (Stage) viewRequestsBtn.getScene().getWindow();
+            Stage stage = (Stage) viewReportsBtn.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setMaximized(true);
         } catch (IOException ex) {
@@ -244,17 +213,7 @@ public class MaintenanceRequestController implements Initializable {
             return false;
         }
 
-        if (priorityCombo.getValue() == null) {
-            showAlert("Validation Error", "Please select a priority level.");
-            priorityCombo.requestFocus();
-            return false;
-        }
 
-        if (statusCombo.getValue() == null) {
-            showAlert("Validation Error", "Please select a status.");
-            statusCombo.requestFocus();
-            return false;
-        }
 
         return true;
     }
@@ -271,8 +230,7 @@ public class MaintenanceRequestController implements Initializable {
         staffNameCombo.setValue(null);
         locationField.clear();
         issueArea.clear();
-        priorityCombo.setValue("Medium");
-        statusCombo.setValue("Pending");
+
         selectedImageFile = null;
         imageBase64 = null;
         imageContentType = null;
@@ -294,13 +252,7 @@ public class MaintenanceRequestController implements Initializable {
         return issueArea.getText().trim();
     }
 
-    public String getPriority() {
-        return priorityCombo.getValue();
-    }
 
-    public String getStatus() {
-        return statusCombo.getValue();
-    }
 
     public File getSelectedImageFile() {
         return selectedImageFile;

@@ -3,49 +3,44 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.geometry.Insets?>
+<?import javafx.geometry.Pos?>
 
-<BorderPane stylesheets="@/Styles/staffloginstyle.css" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.Maintenix.Staff.StaffLoginController" styleClass="login-root">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.Maintenix.Staff.StaffLoginController"
+            stylesheets="@/Styles/staffloginstyle.css" styleClass="login-root">
 
-    <!-- Left Section -->
-    <left>
-        <VBox alignment="CENTER_LEFT" spacing="15" styleClass="login-left">
-            <ImageView styleClass="logo" fx:id="logo" fitWidth="100" fitHeight="150" preserveRatio="true"/>
-            <Label text="STAFF LOGIN" styleClass="subtitle"/>
-
-            <Label text="Email" styleClass="label"/>
-            <TextField fx:id="emailField" promptText="Enter your email" styleClass="input"/>
-
-            <Label text="Password" styleClass="label"/>
-            <PasswordField fx:id="passwordField" promptText="Enter your password" styleClass="input"/>
-
-            <HBox alignment="CENTER_LEFT" spacing="8">
-                <CheckBox style="-fx-cursor: hand;" fx:id="rememberMe" text="Remember Me"/>
-            </HBox>
-
-            <Button text="Log in" fx:id="loginBtn" styleClass="login-btn"/>
-
-            <HBox styleClass="account-links" alignment="CENTER_LEFT" spacing="5" maxWidth="300">
-                <Label styleClass="account-text" text="Don't have an account?"/>
-                <Hyperlink fx:id="signup_link" styleClass="signup-link" text="Sign up."/>
-            </HBox>
-
-
-
-            <!-- Back button in a separate HBox aligned to the right -->
-            <HBox alignment="CENTER_RIGHT" style="-fx-padding: 0 40 0 0;">
-                <Button fx:id="backLink" styleClass="back" text="Back" onAction="#handleBackClick">
-                    <VBox.margin>
-                        <Insets right="250" />
-                    </VBox.margin>
-                </Button>
-            </HBox>
-        </VBox>
-    </left>
-
-
-    <!-- Right Section -->
     <center>
-        <ImageView fx:id="illustration" fitWidth="450" preserveRatio="true"/>
+        <HBox alignment="CENTER" spacing="40" styleClass="login-container">
+
+            <!-- Left Section -->
+            <VBox alignment="CENTER" spacing="20" styleClass="left-section">
+                <ImageView fx:id="logo" fitHeight="100" fitWidth="150" preserveRatio="true"/>
+                <ImageView fx:id="illustration" fitWidth="300" preserveRatio="true"/>
+                <Label text="Welcome Back!" styleClass="welcome-text"/>
+            </VBox>
+
+            <!-- Right Section (Login Form) -->
+            <VBox alignment="CENTER" spacing="20" styleClass="right-section">
+                <!-- Back Button (top-right of form) -->
+                <HBox alignment="TOP_RIGHT" styleClass="back-container">
+                    <Button fx:id="backLink" text="← Back" onAction="#handleBackClick" styleClass="back-btn"/>
+                </HBox>
+
+                <Label text="Log in" styleClass="form-title"/>
+
+                <TextField fx:id="emailField" promptText="Username" styleClass="input"/>
+                <PasswordField fx:id="passwordField" promptText="Password" styleClass="input"/>
+
+                <HBox alignment="CENTER_LEFT">
+                    <CheckBox fx:id="rememberMe" text="Remember Me" styleClass="remember-me"/>
+                </HBox>
+
+                <Button text="Log in" fx:id="loginBtn" styleClass="login-btn"/>
+
+                <Label text="OR" styleClass="divider"/>
+
+                <Hyperlink fx:id="signup_link" text="Sign up" styleClass="signup-link"/>
+            </VBox>
+        </HBox>
     </center>
 
 </BorderPane>

@@ -28,7 +28,7 @@ public class StaffLoginController {
 
     @FXML
     public void initialize() {
-        illustration.setImage(new javafx.scene.image.Image(Objects.requireNonNull(getClass().getResource("/images/staff login.png")).toExternalForm()));
+        illustration.setImage(new javafx.scene.image.Image(Objects.requireNonNull(getClass().getResource("/images/Staff login image.png")).toExternalForm()));
         logo.setImage(new javafx.scene.image.Image(Objects.requireNonNull(getClass().getResource("/images/logo.png")).toExternalForm()));
         emailField.setMaxWidth(300);
         passwordField.setMaxWidth(300);

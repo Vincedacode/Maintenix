@@ -1,47 +1,46 @@
-.logo{
--fx-margin-left: 50px
-}
 .login-root {
-    -fx-background-color: #f8f9ff;
+    -fx-background-color: #f2f4f8;
+    -fx-padding: 50;
 }
 
-.login-left {
-    -fx-padding: 50 0 0 100;
-    -fx-pref-width:650;
-    -fx-background-color:#F5F5F5;
-
+.login-container {
+    -fx-background-color: #ffffff;
+    -fx-padding: 40;
+    -fx-background-radius: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 20, 0, 0, 8);
 }
 
-.app-title {
-    -fx-font-size: 28px;
+.left-section {
+    -fx-alignment: center;
+    -fx-padding: 20;
+}
+
+.welcome-text {
+    -fx-font-size: 24px;
     -fx-font-weight: bold;
     -fx-text-fill: #1E3A8A;
 }
 
-.subtitle {
-    -fx-font-size: 16px;
-   -fx-text-fill: #1E3A8A;
-    -fx-font-weight: bold;
-    -fx-padding: 0 0 0 0;
+.right-section {
+    -fx-pref-width: 350;
+    -fx-padding: 30 20;
+    -fx-alignment: center;
 }
 
-.label {
-    -fx-font-size: 14px;
-    -fx-text-fill: #1E3A8A;
-    -fx-padding: 10 0 5 0;
+.form-title {
+    -fx-font-size: 22px;
     -fx-font-weight: bold;
+    -fx-text-fill: #000;
 }
 
 .input {
-     -fx-position: absolute;
-    -fx-pref-width: 300 ;
-    -fx-max-width: 300;
+    -fx-pref-width: 280;
     -fx-pref-height: 40;
-    -fx-background-radius: 8;
-    -fx-border-radius: 8;
-    -fx-border-color: #2563EB;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: #ddd;
+    -fx-padding: 0 15;
     -fx-font-size: 14px;
-    -fx-padding: 0 10;
 }
 
 .login-btn {
@@ -49,44 +48,40 @@
     -fx-text-fill: white;
     -fx-font-size: 16px;
     -fx-font-weight: bold;
-    -fx-pref-width: 300;
-    -fx-pref-height: 45;
-    -fx-background-radius: 10;
+    -fx-pref-width: 280;
+    -fx-pref-height: 40;
+    -fx-background-radius: 20;
     -fx-cursor: hand;
 }
 
 .login-btn:hover {
-     -fx-background-color: #2563EB;
-}
-.link-text{
--fx-font-weight: bold;
- -fx-alignment: center-left;
+    -fx-background-color: #2563EB;
 }
 
-.account-text{
--fx-text-fill: #2563EB;
-
-}
-.signup-link{
--fx-text-fill: #1E3A8A;
--fx-underline: true;
--fx-font-weight: bold;
-}
-
-.signup-link:hover{
--fx-text-fill: #2563EB;
-}
-
-.back{
- -fx-background-color: #1E3A8A;
-    -fx-text-fill: white;
-    -fx-font-size: 12px;
+.signup-link {
+    -fx-text-fill: #2563EB;
     -fx-font-weight: bold;
-    -fx-pref-width: 70;
-    -fx-pref-height: 30;
-    -fx-background-radius: 10;
+    -fx-underline: false;
+    -fx-font-size: 14px;
+}
+
+.signup-link:hover {
+    -fx-text-fill: #1E3A8A;
+}
+
+.back-container {
+    -fx-alignment: top-right;
+    -fx-pref-width: 100%;
+}
+
+.back-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #1E3A8A;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
     -fx-cursor: hand;
 }
-.back:hover{
--fx-background-color: #2563EB;
+
+.back-btn:hover {
+    -fx-text-fill: #2563EB;
 }

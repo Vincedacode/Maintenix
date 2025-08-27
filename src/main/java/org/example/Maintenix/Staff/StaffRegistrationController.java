@@ -169,6 +169,14 @@ public class StaffRegistrationController implements Initializable {
                 dbdao.registerStaff(username,department,fullName,email,password);
                 showAlert("Success", "Account created successfully!");
                 clearForm();
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/StaffLogin.fxml"));
+                    Parent root = loader.load();
+                    Stage stage = (Stage) createAccountBtn.getScene().getWindow();
+                    stage.setScene(new Scene(root));
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }catch (Exception e){
                 System.out.println(e.getMessage());
             }

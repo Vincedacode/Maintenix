@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane stylesheets="@/Styles/maintenancerequeststyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Maintenix.Staff.MaintenanceRequestController" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<AnchorPane stylesheets="@/Styles/maintenancerequeststyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Maintenix.Staff.MaintenanceReportController" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
     <children>
         <!-- Main Container -->
         <HBox prefHeight="600.0" prefWidth="1000.0" styleClass="main-container" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -38,7 +38,7 @@
                         <!-- Welcome Text -->
                         <HBox alignment="CENTER_LEFT" prefHeight="170.0" styleClass="welcome-container">
                             <children>
-                                <Label styleClass="welcome-text" text="Request Help!" />
+                                <Label styleClass="welcome-text" text="Make Report!" />
                             </children>
                         </HBox>
                     </children>
@@ -50,7 +50,7 @@
                         <!-- Form Title -->
                         <HBox alignment="CENTER_LEFT" prefHeight="80.0" styleClass="title-container">
                             <children>
-                                <Label styleClass="signup-title" text="Maintenance Request" />
+                                <Label styleClass="signup-title" text="Maintenance Report" />
                             </children>
                         </HBox>
 
@@ -83,23 +83,23 @@
                                     </children>
                                 </VBox>
 
-                                <!-- Priority and Status Row -->
+
+                                <!-- Priority and Status Row (Removed ComboBoxes but kept structure) -->
                                 <HBox spacing="15.0">
                                     <children>
                                         <VBox spacing="5.0" HBox.hgrow="ALWAYS">
                                             <children>
-                                                <Label styleClass="field-label" text="Priority" />
-                                                <ComboBox fx:id="priorityCombo" prefHeight="40.0" styleClass="combo-field" />
+                                                <Label styleClass="field-label" text="" />
                                             </children>
                                         </VBox>
                                         <VBox spacing="5.0" HBox.hgrow="ALWAYS">
                                             <children>
-                                                <Label styleClass="field-label" text="Status" />
-                                                <ComboBox fx:id="statusCombo" prefHeight="40.0" styleClass="combo-field" />
+                                                <Label styleClass="field-label" text="" />
                                             </children>
                                         </VBox>
                                     </children>
                                 </HBox>
+
 
                                 <!-- Image Upload Section -->
                                 <VBox spacing="5.0">
@@ -118,7 +118,7 @@
                                 </VBox>
 
                                 <!-- Submit Request Button -->
-                                <Button fx:id="submitRequestBtn"  prefHeight="45.0" styleClass="create-account-btn" text="Submit Request" />
+                                <Button fx:id="submitReportBtn"  prefHeight="45.0" styleClass="create-account-btn" text="Submit Report" />
 
                                 <!-- OR Separator -->
                                 <HBox alignment="CENTER" spacing="10.0" styleClass="separator-container">
@@ -130,7 +130,7 @@
                                 </HBox>
 
                                 <!-- View Requests Button -->
-                                <Button fx:id="viewRequestsBtn"  prefHeight="45.0" styleClass="login-btn" text="View My Requests" />
+                                <Button fx:id="viewReportsBtn"  prefHeight="45.0" styleClass="login-btn" text="View History" />
                             </children>
                         </VBox>
                     </children>

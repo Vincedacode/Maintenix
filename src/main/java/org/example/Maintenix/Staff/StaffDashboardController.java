@@ -136,8 +136,16 @@ public class StaffDashboardController implements Initializable {
         alert.setHeaderText("Report an Issue");
         alert.setContentText("This would open the issue reporting form.");
         alert.showAndWait();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/MaintenanceReport.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) reportIssueBtn.getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
 
-        System.out.println("Report issue clicked");
+
         // Add issue reporting logic here
     }
 

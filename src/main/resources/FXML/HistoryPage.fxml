@@ -31,7 +31,7 @@
                 </HBox>
 
                 <!-- Navigation Menu -->
-                <VBox styleClass="nav-menu" spacing="5.0">
+                <VBox styleClass="nav-menu" spacing="8.0">
                     <children>
                         <Button fx:id="dashboardBtn" styleClass="nav-item" text="📊 Overview" />
                         <Button fx:id="devicesBtn" styleClass="nav-item" text="📱 Devices" />
@@ -41,10 +41,10 @@
 
                 <!-- Bottom Navigation -->
                 <Region VBox.vgrow="ALWAYS" />
-                <VBox spacing="5.0">
+                <VBox spacing="8.0">
                     <children>
                         <Button fx:id="profileBtn" styleClass="nav-item" text="👤 My Profile" />
-                        <Button fx:id="signOutBtn" styleClass="nav-item" text="🚪 Sign Out" />
+                        <Button fx:id="signOutBtn" styleClass="nav-item,sign-out-btn" text="🚪 Sign Out" />
                     </children>
                 </VBox>
             </children>
@@ -55,81 +55,130 @@
     </left>
 
     <center>
-        <VBox styleClass="main-content" BorderPane.alignment="CENTER">
-            <children>
-                <!-- Header -->
-                <HBox styleClass="header" alignment="CENTER_LEFT">
+        <ScrollPane fitToWidth="true" styleClass="main-scroll">
+            <content>
+                <VBox styleClass="main-content" spacing="25.0">
                     <children>
-                        <VBox HBox.hgrow="ALWAYS">
+                        <!-- Header Section -->
+                        <VBox styleClass="header-section">
                             <children>
-                                <Label styleClass="page-title" text="History">
-                                    <font>
-                                        <Font name="System Bold" size="32.0" />
-                                    </font>
-                                </Label>
-                                <Label styleClass="welcome-text" text="Track your device maintenance history" />
+                                <HBox styleClass="header" alignment="CENTER_LEFT">
+                                    <children>
+                                        <VBox HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label styleClass="page-title" text="History">
+                                                    <font>
+                                                        <Font name="System Bold" size="36.0" />
+                                                    </font>
+                                                </Label>
+                                                <Label styleClass="page-subtitle" text="Track your device maintenance and request history" />
+                                            </children>
+                                        </VBox>
+                                        <HBox spacing="12.0" alignment="CENTER_RIGHT">
+                                            <children>
+                                                <Button fx:id="refreshBtn" styleClass="refresh-btn" text="🔄 Refresh" />
+                                                <Button fx:id="filterBtn" styleClass="filter-btn" text="🔍 Filter" />
+                                                <Button fx:id="exportBtn" styleClass="export-btn" text="📊 Export" />
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </HBox>
+
+                                <!-- Stats Cards -->
+                                <HBox spacing="20.0" styleClass="stats-container">
+                                    <children>
+                                        <VBox styleClass="stats-card stats-requests" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label styleClass="stats-icon" text="📝" />
+                                                <Label styleClass="stats-title" text="Equipment Requests" />
+                                                <Label fx:id="requestsCountLabel" styleClass="stats-count" text="(0)" />
+                                            </children>
+                                        </VBox>
+                                        <VBox styleClass="stats-card stats-reports" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label styleClass="stats-icon" text="🔧" />
+                                                <Label styleClass="stats-title" text="Maintenance Reports" />
+                                                <Label fx:id="reportsCountLabel" styleClass="stats-count" text="(0)" />
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
                             </children>
                         </VBox>
-                        <HBox spacing="10.0">
-                            <children>
-                                <Button fx:id="filterBtn" styleClass="filter-btn" text="Filter" />
-                                <Button fx:id="exportBtn" styleClass="export-btn" text="Export" />
-                            </children>
-                        </HBox>
-                    </children>
-                    <VBox.margin>
-                        <Insets bottom="30.0" />
-                    </VBox.margin>
-                </HBox>
 
-                <!-- History Table -->
-                <VBox styleClass="table-container">
-                    <children>
-                        <!-- Table Header -->
-                        <HBox styleClass="table-header">
+                        <!-- Equipment Requests Table -->
+                        <VBox styleClass="table-container">
                             <children>
-                                <Label styleClass="header-cell,device-col" text="Device">
-                                    <font>
-                                        <Font name="System Bold" size="14.0" />
-                                    </font>
-                                </Label>
-                                <Label styleClass="header-cell,issue-col" text="Issue">
-                                    <font>
-                                        <Font name="System Bold" size="14.0" />
-                                    </font>
-                                </Label>
-                                <Label styleClass="header-cell,date-col" text="Date">
-                                    <font>
-                                        <Font name="System Bold" size="14.0" />
-                                    </font>
-                                </Label>
-                                <Label styleClass="header-cell,status-col" text="Status">
-                                    <font>
-                                        <Font name="System Bold" size="14.0" />
-                                    </font>
-                                </Label>
-                                <Label styleClass="header-cell,action-col" text="Action">
-                                    <font>
-                                        <Font name="System Bold" size="14.0" />
-                                    </font>
-                                </Label>
-                            </children>
-                        </HBox>
+                                <HBox styleClass="section-header" alignment="CENTER_LEFT">
+                                    <children>
+                                        <Label styleClass="section-title" text="📝 Equipment Requests" />
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Label styleClass="section-badge" text="Latest" />
+                                    </children>
+                                </HBox>
 
-                        <!-- Scrollable table content -->
-                        <ScrollPane styleClass="table-scroll" fitToWidth="true" VBox.vgrow="ALWAYS">
-                            <content>
-                                <VBox fx:id="historyTableBody" styleClass="table-body">
-                                    <!-- Table rows will be dynamically added here -->
+                                <VBox styleClass="table-wrapper">
+                                    <children>
+                                        <HBox styleClass="table-header">
+                                            <children>
+                                                <Label styleClass="header-cell item-header" text="Item Name" />
+                                                <Label styleClass="header-cell desc-header" text="Description" />
+                                                <Label styleClass="header-cell date-header" text="Date" />
+                                                <Label styleClass="header-cell priority-header" text="Priority" />
+                                                <Label styleClass="header-cell status-header" text="Status" />
+                                                <Label styleClass="header-cell action-header" text="Action" />
+                                            </children>
+                                        </HBox>
+
+                                        <ScrollPane styleClass="table-scroll" fitToWidth="true" maxHeight="300">
+                                            <content>
+                                                <VBox fx:id="requestsTableBody" styleClass="table-body" />
+                                            </content>
+                                        </ScrollPane>
+                                    </children>
                                 </VBox>
-                            </content>
-                        </ScrollPane>
+                            </children>
+                        </VBox>
+
+                        <!-- Maintenance Reports Table -->
+                        <VBox styleClass="table-container">
+                            <children>
+                                <HBox styleClass="section-header" alignment="CENTER_LEFT">
+                                    <children>
+                                        <Label styleClass="section-title" text="🔧 Maintenance Reports" />
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Label styleClass="section-badge" text="Active" />
+                                    </children>
+                                </HBox>
+
+                                <VBox styleClass="table-wrapper">
+                                    <children>
+                                        <HBox styleClass="table-header">
+                                            <children>
+                                                <Label styleClass="header-cell issue-header" text="Issue" />
+                                                <Label styleClass="header-cell location-header" text="Location" />
+                                                <Label styleClass="header-cell date-header" text="Date" />
+                                                <Label styleClass="header-cell priority-header" text="Priority" />
+                                                <Label styleClass="header-cell status-header" text="Status" />
+                                                <Label styleClass="header-cell action-header" text="Action" />
+                                            </children>
+                                        </HBox>
+
+                                        <ScrollPane styleClass="table-scroll" fitToWidth="true" maxHeight="300">
+                                            <content>
+                                                <VBox fx:id="reportsTableBody" styleClass="table-body" />
+                                            </content>
+                                        </ScrollPane>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </VBox>
                     </children>
+                    <padding>
+                        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+                    </padding>
                 </VBox>
-            </children>
-            <padding>
-                <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
-            </padding>
-        </VBox>
+            </content>
+        </ScrollPane>
     </center>
 </BorderPane>

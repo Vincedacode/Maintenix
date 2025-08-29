@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<BorderPane stylesheets="@/Styles/devicesstyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Maintenix.Staff.DevicesController">
+    <left>
+        <VBox styleClass="sidebar">
+            <!-- Logo Section -->
+            <HBox styleClass="logo-section" alignment="CENTER_LEFT">
+                <ImageView fitHeight="100" fitWidth="150" preserveRatio="true">
+                    <image>
+                        <Image url="@/images/logo.png" />
+                    </image>
+                </ImageView>
+                <Label styleClass="logo-text" text="" />
+            </HBox>
+
+            <!-- Navigation Menu -->
+            <VBox styleClass="nav-menu" spacing="8.0">
+                <Button fx:id="dashboardBtn" styleClass="nav-item,nav-active" text="📊 Overview" />
+                <Button fx:id="devicesBtn" styleClass="nav-item" text="📱 Devices" />
+                <Button fx:id="historyBtn" styleClass="nav-item" text="📋 History" />
+            </VBox>
+
+            <!-- Spacer -->
+            <Region VBox.vgrow="ALWAYS" />
+
+            <!-- Bottom Menu -->
+            <VBox spacing="8.0">
+                <Button fx:id="profileBtn" styleClass="nav-item" text="👤 My Profile" />
+                <Button fx:id="signOutBtn" styleClass="nav-item,sign-out-btn" text="🚪 Sign Out" />
+            </VBox>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox styleClass="main-content">
+            <!-- Header -->
+            <HBox styleClass="header">
+                <VBox>
+                    <Label styleClass="page-title" text="Dashboard" />
+                    <Label styleClass="welcome-text" text="Welcome, Divine!" />
+                </VBox>
+
+                <HBox styleClass="header-buttons">
+                    <Button styleClass="register-btn" text="Register Device" />
+                    <Button styleClass="report-btn" text="Report issue" />
+                </HBox>
+            </HBox>
+
+            <!-- Stats Cards -->
+            <HBox styleClass="stats-section">
+                <VBox styleClass="stat-card, active-card">
+                    <Label styleClass="stat-number" text="5" />
+                    <Label styleClass="stat-label" text="Active" />
+                </VBox>
+
+                <VBox styleClass="stat-card, pending-card">
+                    <Label styleClass="stat-number" text="2" />
+                    <Label styleClass="stat-label" text="Pending" />
+                </VBox>
+            </HBox>
+
+            <!-- Device Table -->
+            <VBox styleClass="table-section">
+                <TableView fx:id="deviceTable" styleClass="device-table">
+                    <columns>
+                        <TableColumn fx:id="deviceIdColumn" prefWidth="300.0" styleClass="table-header" text="DEVICE ID" />
+                        <TableColumn fx:id="deviceNameColumn" prefWidth="300.0" styleClass="table-header" text="DEVICE" />
+                        <TableColumn fx:id="statusColumn" prefWidth="300.0" styleClass="table-header" text="STATUS" />
+                    </columns>
+                </TableView>
+            </VBox>
+
+            <!-- Footer -->
+            <HBox styleClass="footer">
+                <Label styleClass="footer-text" text="Status" />
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

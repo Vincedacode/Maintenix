@@ -24,7 +24,7 @@ public class StaffDashboardController implements Initializable {
     @FXML private Button usageBtn;
     @FXML private Button profileBtn;
     @FXML private Button signOutBtn;
-    @FXML private Button reportIssueBtn;
+    @FXML private Button reportIssueBtn, requestBtn;
     @FXML
     private Label welcomeLabel;
 
@@ -68,6 +68,19 @@ public class StaffDashboardController implements Initializable {
         }
     }
 
+    public void requestDevice(){
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/EquipmentRequest.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) requestBtn.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setMaximized(true); // ✅ Ensure full screen on back
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
     // Navigation button handlers
     private void handleDashboardClick() {
         setActiveNavButton(dashboardBtn);
@@ -79,7 +92,17 @@ public class StaffDashboardController implements Initializable {
         setActiveNavButton(devicesBtn);
         System.out.println("Devices selected");
         // Add navigation logic here
-        showInfoDialog("Devices", "Navigate to Devices page");
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Devices.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) historyBtn.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Maintenix - Devices");
+        } catch (IOException e) {
+            System.err.println("Error loading history page: " + e.getMessage());
+            showInfoDialog("Error", "Could not load Devices page");
+        }
     }
 
     private void handleHistoryClick() {

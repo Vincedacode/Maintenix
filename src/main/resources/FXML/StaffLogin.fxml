@@ -27,7 +27,7 @@
 
                 <Label text="Log in" styleClass="form-title"/>
 
-                <TextField fx:id="emailField" promptText="Username" styleClass="input"/>
+                <TextField fx:id="emailField" promptText="Email" styleClass="input"/>
                 <PasswordField fx:id="passwordField" promptText="Password" styleClass="input"/>
 
                 <HBox alignment="CENTER_LEFT">

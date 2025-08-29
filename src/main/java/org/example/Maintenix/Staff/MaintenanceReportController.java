@@ -162,6 +162,7 @@ public class MaintenanceReportController implements Initializable {
                 if (success) {
                     showAlert("Success", "Maintenance request submitted successfully!");
                     clearForm();
+                    viewReports();
                 } else {
                     showAlert("Error", "Failed to submit maintenance request. Please try again.");
                 }

@@ -90,9 +90,5 @@ public class staffdao {
         return staffNames;
     }
 
-// You'll also need these imports in your staffdao class if not already present:
-// import javafx.collections.FXCollections;
-// import javafx.collections.ObservableList;
-// import java.util.ArrayList;
-// import java.util.List;
+
 }

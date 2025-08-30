@@ -21,8 +21,8 @@
 
             <!-- Navigation Menu -->
             <VBox styleClass="nav-menu" spacing="8.0">
-                <Button fx:id="dashboardBtn" styleClass="nav-item,nav-active" text="📊 Overview" />
-                <Button fx:id="devicesBtn" styleClass="nav-item" text="📱 Devices" />
+                <Button fx:id="dashboardBtn" styleClass="nav-item" text="📊 Overview" />
+                <Button fx:id="devicesBtn" styleClass="nav-item,nav-active" text="📱 Devices" />
                 <Button fx:id="historyBtn" styleClass="nav-item" text="📋 History" />
             </VBox>
 
@@ -42,25 +42,25 @@
             <!-- Header -->
             <HBox styleClass="header">
                 <VBox>
-                    <Label styleClass="page-title" text="Dashboard" />
-                    <Label styleClass="welcome-text" text="Welcome, Divine!" />
+                    <Label styleClass="page-title" text="Devices" />
+                    <Label fx:id="welcomeLabel" styleClass="welcome-text" text="Welcome, User!" />
                 </VBox>
 
                 <HBox styleClass="header-buttons">
-                    <Button styleClass="register-btn" text="Register Device" />
-                    <Button styleClass="report-btn" text="Report issue" />
+                    <Button onAction="#handleRegisterDevice" styleClass="register-btn" text="Register Device" />
+                    <Button onAction="#handleReportIssue" styleClass="report-btn" text="Report issue" />
                 </HBox>
             </HBox>
 
             <!-- Stats Cards -->
             <HBox styleClass="stats-section">
                 <VBox styleClass="stat-card, active-card">
-                    <Label styleClass="stat-number" text="5" />
+                    <Label fx:id="activeStatusLabel" styleClass="stat-number" text="0" />
                     <Label styleClass="stat-label" text="Active" />
                 </VBox>
 
                 <VBox styleClass="stat-card, pending-card">
-                    <Label styleClass="stat-number" text="2" />
+                    <Label fx:id="pendingStatusLabel" styleClass="stat-number" text="0" />
                     <Label styleClass="stat-label" text="Pending" />
                 </VBox>
             </HBox>
@@ -69,8 +69,8 @@
             <VBox styleClass="table-section">
                 <TableView fx:id="deviceTable" styleClass="device-table">
                     <columns>
-                        <TableColumn fx:id="deviceIdColumn" prefWidth="300.0" styleClass="table-header" text="DEVICE ID" />
-                        <TableColumn fx:id="deviceNameColumn" prefWidth="300.0" styleClass="table-header" text="DEVICE" />
+                        <TableColumn fx:id="deviceIdColumn" prefWidth="300.0" styleClass="table-header" text="REQUEST ID" />
+                        <TableColumn fx:id="deviceNameColumn" prefWidth="300.0" styleClass="table-header" text="EQUIPMENT" />
                         <TableColumn fx:id="statusColumn" prefWidth="300.0" styleClass="table-header" text="STATUS" />
                     </columns>
                 </TableView>
@@ -78,7 +78,7 @@
 
             <!-- Footer -->
             <HBox styleClass="footer">
-                <Label styleClass="footer-text" text="Status" />
+                <Label styleClass="footer-text" text="Your Equipment Requests" />
             </HBox>
         </VBox>
     </center>

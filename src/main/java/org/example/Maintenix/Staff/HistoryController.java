@@ -11,23 +11,20 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
 import javafx.util.Duration;
 import org.bson.Document;
 import org.example.Maintenix.DAO.equipmentrequestdao;
 import org.example.Maintenix.DAO.maintenancereportdao;
+import org.example.Maintenix.DAO.staffdao;
+import org.example.Maintenix.Utils.UserSession;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -48,81 +45,122 @@ public class HistoryController implements Initializable {
     @FXML private VBox reportsTableBody;
     @FXML private Label requestsCountLabel;
     @FXML private Label reportsCountLabel;
+    @FXML private Label welcomeLabel;
 
-    private static equipmentrequestdao equipmentDAO;
-    private static maintenancereportdao reportDAO;
-
-    // History data structure
-    public static class HistoryRecord {
-        private String device;
-        private String issue;
-        private LocalDate date;
-        private String status;
-
-        public HistoryRecord(String device, String issue, LocalDate date, String status) {
-            this.device = device;
-            this.issue = issue;
-            this.date = date;
-            this.status = status;
-        }
-
-        // Getters
-        public String getDevice() { return device; }
-        public String getIssue() { return issue; }
-        public LocalDate getDate() { return date; }
-        public String getStatus() { return status; }
-
-        public String getFormattedDate() {
-            return date.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
-        }
-    }
+    private equipmentrequestdao equipmentDAO;
+    private maintenancereportdao reportDAO;
+    private staffdao staffDAO;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         equipmentDAO = new equipmentrequestdao();
         reportDAO = new maintenancereportdao();
+        staffDAO = new staffdao();
 
         setupButtonActions();
         setupButtonStyles();
 
-        loadAllData();
+        // Load data from user session
+        loadUserData();
     }
 
-    private void loadAllData() {
-        loadRequestsData();
-        loadReportsData();
+    /**
+     * Load data for the currently logged-in user
+     */
+    private void loadUserData() {
+        UserSession session = UserSession.getInstance();
+        if (session.isLoggedIn()) {
+            String username = session.getCurrentUsername();
+            String fullName = session.getCurrentUserFullName();
+
+            System.out.println("History Controller: Loading data for username " + username);
+
+            // Update welcome message
+            if (welcomeLabel != null) {
+                welcomeLabel.setText("History for " + fullName + " (@" + username + ")");
+            }
+
+            // Load personalized data
+            loadPersonalizedData(username);
+        } else {
+            System.err.println("No user logged in - showing empty state");
+            showEmptyState();
+        }
     }
 
-    private void loadRequestsData() {
+    /**
+     * Load data specific to the logged-in user
+     */
+    private void loadPersonalizedData(String username) {
+        if (username == null || username.trim().isEmpty()) {
+            System.err.println("No username provided - cannot load personalized data");
+            showEmptyState();
+            return;
+        }
+
+        loadPersonalizedRequestsData(username);
+        loadPersonalizedReportsData(username);
+    }
+
+    /**
+     * Load equipment requests for the current user only
+     */
+    private void loadPersonalizedRequestsData(String username) {
         requestsTableBody.getChildren().clear();
-        List<Document> requests = equipmentDAO.getAllEquipmentRequests();
 
-        if (requests.isEmpty()) {
-            requestsTableBody.getChildren().add(createEmptyRow("No Equipment Requests Found"));
-            updateRequestsCount(0);
-        } else {
-            for (Document doc : requests) {
-                HBox row = createRequestRow(doc);
-                requestsTableBody.getChildren().add(row);
+        try {
+            List<Document> userRequests = equipmentDAO.getEquipmentRequestsByUsername(username);
+
+            if (userRequests.isEmpty()) {
+                requestsTableBody.getChildren().add(createEmptyRow("No Equipment Requests Found for " + username));
+                updateRequestsCount(0);
+            } else {
+                for (Document doc : userRequests) {
+                    HBox row = createRequestRow(doc);
+                    requestsTableBody.getChildren().add(row);
+                }
+                updateRequestsCount(userRequests.size());
             }
-            updateRequestsCount(requests.size());
+        } catch (Exception e) {
+            System.err.println("Error loading personalized equipment requests: " + e.getMessage());
+            requestsTableBody.getChildren().add(createEmptyRow("Error loading equipment requests"));
+            updateRequestsCount(0);
         }
     }
 
-    private void loadReportsData() {
+    /**
+     * Load maintenance reports for the current user only
+     */
+    private void loadPersonalizedReportsData(String username) {
         reportsTableBody.getChildren().clear();
-        List<Document> reports = reportDAO.getAllMaintenanceRequests();
 
-        if (reports.isEmpty()) {
-            reportsTableBody.getChildren().add(createEmptyRow("No Maintenance Reports Found"));
-            updateReportsCount(0);
-        } else {
-            for (Document doc : reports) {
-                HBox row = createReportRow(doc);
-                reportsTableBody.getChildren().add(row);
+        try {
+            List<Document> userReports = reportDAO.getMaintenanceRequestsByUsername(username);
+
+            if (userReports.isEmpty()) {
+                reportsTableBody.getChildren().add(createEmptyRow("No Maintenance Reports Found for " + username));
+                updateReportsCount(0);
+            } else {
+                for (Document doc : userReports) {
+                    HBox row = createReportRow(doc);
+                    reportsTableBody.getChildren().add(row);
+                }
+                updateReportsCount(userReports.size());
             }
-            updateReportsCount(reports.size());
+        } catch (Exception e) {
+            System.err.println("Error loading personalized maintenance reports: " + e.getMessage());
+            reportsTableBody.getChildren().add(createEmptyRow("Error loading maintenance reports"));
+            updateReportsCount(0);
         }
+    }
+
+    private void showEmptyState() {
+        requestsTableBody.getChildren().clear();
+        reportsTableBody.getChildren().clear();
+        requestsTableBody.getChildren().add(createEmptyRow("Please log in to view your history"));
+        reportsTableBody.getChildren().add(createEmptyRow("Please log in to view your history"));
+        updateRequestsCount(0);
+        updateReportsCount(0);
     }
 
     private HBox createRequestRow(Document doc) {
@@ -157,7 +195,7 @@ public class HistoryController implements Initializable {
         Label statusLabel = createStatusBadge(status);
 
         // Action button
-        Button viewBtn = createActionButton("👁 View", "view-button");
+        Button viewBtn = createActionButton("View", "view-button");
         viewBtn.setOnAction(e -> showRequestDetails(doc));
 
         row.getChildren().addAll(itemLabel, descLabel, dateLabel, priorityLabel, statusLabel, viewBtn);
@@ -196,13 +234,14 @@ public class HistoryController implements Initializable {
         Label statusLabel = createStatusBadge(status);
 
         // Action button
-        Button viewBtn = createActionButton("👁 View", "view-button");
+        Button viewBtn = createActionButton("View", "view-button");
         viewBtn.setOnAction(e -> showReportDetails(doc));
 
         row.getChildren().addAll(issueLabel, locationLabel, dateLabel, priorityLabel, statusLabel, viewBtn);
         return row;
     }
 
+    // Helper methods for creating UI elements
     private Label createStyledLabel(String text, String styleClass) {
         Label label = new Label(text);
         label.getStyleClass().add(styleClass);
@@ -305,21 +344,26 @@ public class HistoryController implements Initializable {
     }
 
     private void showRequestDetails(Document doc) {
+        UserSession session = UserSession.getInstance();
+        String currentUsername = session.getCurrentUsername();
+
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Equipment Request Details");
-        alert.setHeaderText("🔧 " + doc.getString("item_name"));
+        alert.setHeaderText("Equipment: " + doc.getString("item_name"));
 
         String content = String.format(
-                "📝 Description: %s\n\n" +
-                        "⚡ Priority: %s\n\n" +
-                        "📊 Status: %s\n\n" +
-                        "📅 Created: %s",
+                "Description: %s\n\n" +
+                        "Priority: %s\n\n" +
+                        "Status: %s\n\n" +
+                        "Created: %s\n\n" +
+                        "Requested by: %s",
                 doc.getString("description") != null ? doc.getString("description") : "No description",
                 doc.getString("priority") != null ? doc.getString("priority") : "Not specified",
                 doc.getString("status") != null ? doc.getString("status") : "Unknown",
                 doc.getDate("created_at") != null ?
                         doc.getDate("created_at").toInstant().atZone(java.time.ZoneId.systemDefault())
-                                .toLocalDate().format(DateTimeFormatter.ofPattern("MMM dd, yyyy")) : "Unknown"
+                                .toLocalDate().format(DateTimeFormatter.ofPattern("MMM dd, yyyy")) : "Unknown",
+                currentUsername
         );
 
         alert.setContentText(content);
@@ -327,21 +371,26 @@ public class HistoryController implements Initializable {
     }
 
     private void showReportDetails(Document doc) {
+        UserSession session = UserSession.getInstance();
+        String currentUsername = session.getCurrentUsername();
+
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Maintenance Report Details");
-        alert.setHeaderText("🔧 " + doc.getString("issue"));
+        alert.setHeaderText("Issue: " + doc.getString("issue"));
 
         String content = String.format(
-                "📍 Location: %s\n\n" +
-                        "⚡ Priority: %s\n\n" +
-                        "📊 Status: %s\n\n" +
-                        "📅 Created: %s",
+                "Location: %s\n\n" +
+                        "Priority: %s\n\n" +
+                        "Status: %s\n\n" +
+                        "Created: %s\n\n" +
+                        "Reported by: %s",
                 doc.getString("location") != null ? doc.getString("location") : "Not specified",
                 doc.getString("priority") != null ? doc.getString("priority") : "Not specified",
                 doc.getString("status") != null ? doc.getString("status") : "Unknown",
                 doc.getDate("created_at") != null ?
                         doc.getDate("created_at").toInstant().atZone(java.time.ZoneId.systemDefault())
-                                .toLocalDate().format(DateTimeFormatter.ofPattern("MMM dd, yyyy")) : "Unknown"
+                                .toLocalDate().format(DateTimeFormatter.ofPattern("MMM dd, yyyy")) : "Unknown",
+                currentUsername
         );
 
         alert.setContentText(content);
@@ -387,22 +436,14 @@ public class HistoryController implements Initializable {
         rotate.setCycleCount(1);
         rotate.play();
 
-        // Add fade animation to content
-        FadeTransition fade = new FadeTransition(Duration.millis(300), requestsTableBody.getParent());
-        fade.setFromValue(1.0);
-        fade.setToValue(0.7);
-        fade.setAutoReverse(true);
-        fade.setCycleCount(2);
-        fade.play();
-
-        // Reload data
-        loadAllData();
+        // Reload data for current user
+        loadUserData();
 
         // Show success message
-        showSuccessDialog("Refresh Complete", "History data has been refreshed successfully!");
+        showSuccessDialog("Refresh Complete", "Your history data has been refreshed successfully!");
     }
 
-    // Navigation handlers
+    // Navigation handlers - All use UserSession now
     private void handleDashboardClick() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/StaffDashboard.fxml"));
@@ -415,51 +456,48 @@ public class HistoryController implements Initializable {
     }
 
     private void handleDevicesClick() {
-        setActiveNavButton(devicesBtn);
-        System.out.println("Devices selected");
-
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Devices.fxml"));
             Parent root = loader.load();
-            Stage stage = (Stage) historyBtn.getScene().getWindow();
+            Stage stage = (Stage) devicesBtn.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Maintenix - Devices");
         } catch (IOException e) {
-            System.err.println("Error loading history page: " + e.getMessage());
+            System.err.println("Error loading devices page: " + e.getMessage());
             showInfoDialog("Error", "Could not load Devices page");
         }
     }
 
     private void handleHistoryClick() {
         setActiveNavButton(historyBtn);
-        System.out.println("History selected - already on this page");
-        handleRefreshClick(); // Refresh when clicking history
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/HistoryPage.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) historyBtn.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Maintenix - History");
-        } catch (IOException e) {
-            System.err.println("Error loading history page: " + e.getMessage());
-            showInfoDialog("Error", "Could not load History page");
-        }
+        System.out.println("History selected - refreshing current page");
+        handleRefreshClick(); // Just refresh the current page
     }
 
     private void handleProfileClick() {
         setActiveNavButton(profileBtn);
         System.out.println("Profile selected");
-        showInfoDialog("Profile", "Navigate to Profile page");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Profile.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) historyBtn.getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (IOException e) {
+            System.err.println("Error loading history: " + e.getMessage());
+        }
     }
 
     private void handleSignOutClick() {
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Sign Out");
-        alert.setHeaderText("🚪 Are you sure you want to sign out?");
+        alert.setHeaderText("Are you sure you want to sign out?");
         alert.setContentText("You will be logged out of the application.");
 
         alert.showAndWait().ifPresent(response -> {
             if (response.getButtonData().isDefaultButton()) {
+                // Clear user session
+                UserSession.getInstance().clearSession();
+
                 try {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/View.fxml"));
                     Parent root = loader.load();
@@ -474,12 +512,12 @@ public class HistoryController implements Initializable {
 
     private void handleFilterClick() {
         System.out.println("Filter clicked");
-        showInfoDialog("Filter", "🔍 Filter options will allow you to sort by status, priority, and date range");
+        showInfoDialog("Filter", "Filter options will allow you to sort by status, priority, and date range");
     }
 
     private void handleExportClick() {
         System.out.println("Export clicked");
-        showSuccessDialog("Export", "📊 History data would be exported to CSV/PDF format");
+        showSuccessDialog("Export", "Your history data would be exported to CSV/PDF format");
     }
 
     // Utility methods
@@ -498,4 +536,7 @@ public class HistoryController implements Initializable {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    // Remove this method since we no longer need it
+    // public void setCurrentUsername(String username) { ... }
 }

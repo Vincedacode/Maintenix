@@ -20,6 +20,7 @@ public class equipmentrequestdao {
     private MongoDatabase database;
     private MongoCollection<Document> equipmentCollection;
     private MongoCollection<Document> staffCollection;
+    private staffdao staffDAO; // Add reference to staff DAO
 
     // Constructor
     public equipmentrequestdao() {
@@ -27,16 +28,44 @@ public class equipmentrequestdao {
             Dotenv dotenv = Dotenv.load();
             String dbname = dotenv.get("DB_NAME");
             String staffCollectionName = dotenv.get("STAFF_COLLECTION_NAME");
-            String equipmentCollectionName = dotenv.get("REQUESTS_COLLECTION_NAME"); // Add this to your .env file
+            String equipmentCollectionName = dotenv.get("REQUESTS_COLLECTION_NAME");
 
             this.staffCollection = DBConnection.createConnection(dbname, staffCollectionName);
             this.equipmentCollection = DBConnection.createConnection(dbname, equipmentCollectionName);
+            this.staffDAO = new staffdao(); // Initialize staff DAO
 
         } catch (Exception e) {
             System.err.println("Error connecting to MongoDB: " + e.getMessage());
             e.printStackTrace();
         }
     }
+
+    /**
+     * Get equipment requests by username - KEY METHOD FOR PERSONALIZATION
+     */
+    public List<Document> getEquipmentRequestsByUsername(String username) {
+        List<Document> requests = new ArrayList<>();
+
+        try {
+            // Get staff ObjectId from username
+            ObjectId staffId = staffDAO.getStaffIdByUsername(username);
+            if (staffId != null) {
+                Document query = new Document("staff_name", staffId);
+                requests = equipmentCollection.find(query).into(new ArrayList<>());
+                System.out.println("Found " + requests.size() + " equipment requests for user: " + username);
+            } else {
+                System.err.println("Staff not found for username: " + username);
+            }
+
+        } catch (Exception e) {
+            System.err.println("Error retrieving equipment requests by username: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return requests;
+    }
+
+
 
     /**
      * Creates a new equipment request
@@ -150,6 +179,8 @@ public class equipmentrequestdao {
 
         return requests;
     }
+
+    // ... [Keep all your existing methods] ...
 
     /**
      * Get equipment requests by type

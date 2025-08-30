@@ -7,10 +7,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.bson.*;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 import org.example.Maintenix.DBConnection;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
 public class staffdao {
     private final MongoCollection<Document> collection;
 
@@ -28,7 +31,8 @@ public class staffdao {
                     .append("Fullname",fullname)
                     .append("Department",department)
                     .append("Email",email)
-                    .append("Password",password);
+                    .append("Password",password)
+                    .append("created_at", new Date());
             collection.insertOne(staffDocument);
             System.out.println("Staff saved successfully!");
         }
@@ -63,7 +67,77 @@ public class staffdao {
         }
     }
 
-    // Add this method to your existing staffdao.java class
+    /**
+     * Get staff information by username - KEY METHOD FOR PERSONALIZATION
+     */
+    public Document getStaffByUsername(String username) {
+        try {
+            Bson usernameFilter = Filters.eq("Username", username);
+            return collection.find(usernameFilter).first();
+        } catch (Exception e) {
+            System.err.println("Error retrieving staff by username: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Get staff ObjectId by username - CRITICAL for filtering collections
+     */
+    public ObjectId getStaffIdByUsername(String username) {
+        try {
+            Document staff = getStaffByUsername(username);
+            if (staff != null) {
+                return staff.getObjectId("_id");
+            }
+        } catch (Exception e) {
+            System.err.println("Error getting staff ID by username: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean usernameExists(String username) {
+        try {
+            Document query = new Document("Username", username); // Adjust field name to match your database
+            return collection.find(query).first() != null;
+        } catch (Exception e) {
+            System.err.println("Error checking username existence: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public String getFullNameByUsername(String username) {
+        try {
+            Document query = new Document("Username", username); // Adjust field name to match your database
+            Document staff = collection.find(query).first();
+
+            if (staff != null) {
+                return staff.getString("Fullname"); // Adjust field name to match your database
+            }
+        } catch (Exception e) {
+            System.err.println("Error finding staff by username: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
+
+    /**
+     * Get staff full name by username
+     */
+    public String getStaffFullNameByUsername(String username) {
+        try {
+            Document staff = getStaffByUsername(username);
+            return staff != null ? staff.getString("Fullname") : "Unknown Staff";
+        } catch (Exception e) {
+            System.err.println("Error getting staff full name: " + e.getMessage());
+            return "Unknown Staff";
+        }
+    }
 
     /**
      * Get all staff names for dropdown in maintenance request form
@@ -72,7 +146,6 @@ public class staffdao {
         ObservableList<String> staffNames = FXCollections.observableArrayList();
 
         try {
-            // Assuming you have a MongoCollection<Document> called staffCollection
             List<Document> staffList = collection.find().into(new ArrayList<>());
 
             for (Document staff : staffList) {
@@ -90,5 +163,11 @@ public class staffdao {
         return staffNames;
     }
 
+    // Add this method to your existing staffdao class
+
+    /**
+     * Get staff ObjectId by username - CRITICAL METHOD FOR PERSONALIZATION
+     */
 
 }
+

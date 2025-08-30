@@ -20,22 +20,48 @@ public class maintenancereportdao {
     private MongoDatabase database;
     private MongoCollection<Document> reportsCollection;
     private MongoCollection<Document> staffCollection;
+    private staffdao staffDAO; // Add reference to staff DAO
 
     // Constructor
     public maintenancereportdao() {
         try {
-
             Dotenv dotenv = Dotenv.load();
             String dbname = dotenv.get("DB_NAME");
             String staffCollectionName = dotenv.get("STAFF_COLLECTION_NAME");
             String reportsCollectionName = dotenv.get("REPORTS_COLLECTION_NAME");
             this.staffCollection = DBConnection.createConnection(dbname,staffCollectionName);
-           this.reportsCollection = DBConnection.createConnection(dbname,reportsCollectionName);
+            this.reportsCollection = DBConnection.createConnection(dbname,reportsCollectionName);
+            this.staffDAO = new staffdao(); // Initialize staff DAO
 
         } catch (Exception e) {
             System.err.println("Error connecting to MongoDB: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Get maintenance requests by username - KEY METHOD FOR PERSONALIZATION
+     */
+    public List<Document> getMaintenanceRequestsByUsername(String username) {
+        List<Document> requests = new ArrayList<>();
+
+        try {
+            // Get staff ObjectId from username
+            ObjectId staffId = staffDAO.getStaffIdByUsername(username);
+            if (staffId != null) {
+                Document query = new Document("staff_name", staffId);
+                requests = reportsCollection.find(query).into(new ArrayList<>());
+                System.out.println("Found " + requests.size() + " maintenance requests for user: " + username);
+            } else {
+                System.err.println("Staff not found for username: " + username);
+            }
+
+        } catch (Exception e) {
+            System.err.println("Error retrieving maintenance requests by username: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return requests;
     }
 
     /**
@@ -81,10 +107,6 @@ public class maintenancereportdao {
     }
 
     /**
-     * Creates a new maintenance request without image
-     */
-
-    /**
      * Get all staff names for dropdown
      */
     public ObservableList<String> getAllStaffNames() {
@@ -94,7 +116,7 @@ public class maintenancereportdao {
             List<Document> staffList = staffCollection.find().into(new ArrayList<>());
 
             for (Document staff : staffList) {
-                String fullName = staff.getString("full_name");
+                String fullName = staff.getString("Fullname"); // Match your field name
                 if (fullName != null && !fullName.trim().isEmpty()) {
                     staffNames.add(fullName);
                 }
@@ -106,8 +128,8 @@ public class maintenancereportdao {
         }
 
         return staffNames;
-    }
 
+    }
     /**
      * Get staff ObjectId by full name
      */
@@ -126,7 +148,6 @@ public class maintenancereportdao {
 
         return null;
     }
-
 
     /**
      * Get all maintenance requests for a specific staff member
@@ -149,189 +170,5 @@ public class maintenancereportdao {
         return requests;
     }
 
-    /**
-     * Get all maintenance requests
-     */
-    public List<Document> getAllMaintenanceRequests() {
-        List<Document> requests = new ArrayList<>();
-
-        try {
-            requests = reportsCollection.find().into(new ArrayList<>());
-
-        } catch (Exception e) {
-            System.err.println("Error retrieving all maintenance requests: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        return requests;
-    }
-
-    /**
-     * Update maintenance request status
-     */
-    public boolean updateMaintenanceRequestStatus(ObjectId requestId, String newStatus) {
-        try {
-            Document query = new Document("_id", requestId);
-            Document update = new Document("$set", new Document("status", newStatus));
-
-            long modifiedCount = reportsCollection.updateOne(query, update).getModifiedCount();
-
-            if (modifiedCount > 0) {
-                System.out.println("Maintenance request status updated successfully");
-                return true;
-            } else {
-                System.out.println("No maintenance request found with the given ID");
-                return false;
-            }
-
-        } catch (Exception e) {
-            System.err.println("Error updating maintenance request status: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    /**
-     * Update maintenance request priority
-     */
-    public boolean updateMaintenanceRequestPriority(ObjectId requestId, String newPriority) {
-        try {
-            Document query = new Document("_id", requestId);
-            Document update = new Document("$set", new Document("priority", newPriority));
-
-            long modifiedCount = reportsCollection.updateOne(query, update).getModifiedCount();
-
-            if (modifiedCount > 0) {
-                System.out.println("Maintenance request priority updated successfully");
-                return true;
-            } else {
-                System.out.println("No maintenance request found with the given ID");
-                return false;
-            }
-
-        } catch (Exception e) {
-            System.err.println("Error updating maintenance request priority: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    /**
-     * Delete maintenance request
-     */
-    public boolean deleteMaintenanceRequest(ObjectId requestId) {
-        try {
-            Document query = new Document("_id", requestId);
-            long deletedCount = reportsCollection.deleteOne(query).getDeletedCount();
-
-            if (deletedCount > 0) {
-                System.out.println("Maintenance request deleted successfully");
-                return true;
-            } else {
-                System.out.println("No maintenance request found with the given ID");
-                return false;
-            }
-
-        } catch (Exception e) {
-            System.err.println("Error deleting maintenance request: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    /**
-     * Get maintenance requests by status
-     */
-    public List<Document> getMaintenanceRequestsByStatus(String status) {
-        List<Document> requests = new ArrayList<>();
-
-        try {
-            Document query = new Document("status", status);
-            requests = reportsCollection.find(query).into(new ArrayList<>());
-
-        } catch (Exception e) {
-            System.err.println("Error retrieving maintenance requests by status: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        return requests;
-    }
-
-    /**
-     * Get maintenance requests by priority
-     */
-    public List<Document> getMaintenanceRequestsByPriority(String priority) {
-        List<Document> requests = new ArrayList<>();
-
-        try {
-            Document query = new Document("priority", priority);
-            requests = reportsCollection.find(query).into(new ArrayList<>());
-
-        } catch (Exception e) {
-            System.err.println("Error retrieving maintenance requests by priority: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        return requests;
-    }
-
-    /**
-     * Get staff name by ObjectId (for display purposes)
-     */
-    public String getStaffNameById(ObjectId staffId) {
-        try {
-            Document query = new Document("_id", staffId);
-            Document staff = staffCollection.find(query).first();
-
-            if (staff != null) {
-                return staff.getString("full_name");
-            }
-
-        } catch (Exception e) {
-            System.err.println("Error finding staff by ID: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        return "Unknown Staff";
-    }
-
-    /**
-     * Check if maintenance request exists
-     */
-    public boolean maintenanceRequestExists(ObjectId requestId) {
-        try {
-            Document query = new Document("_id", requestId);
-            Document request = reportsCollection.find(query).first();
-            return request != null;
-
-        } catch (Exception e) {
-            System.err.println("Error checking maintenance request existence: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    /**
-     * Get maintenance request by ID
-     */
-    public Document getMaintenanceRequestById(ObjectId requestId) {
-        try {
-            Document query = new Document("_id", requestId);
-            return reportsCollection.find(query).first();
-
-        } catch (Exception e) {
-            System.err.println("Error retrieving maintenance request by ID: " + e.getMessage());
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
-     * Close MongoDB connection
-     */
-    public void closeConnection() {
-        if (mongoClient != null) {
-            mongoClient.close();
-        }
-    }
 }
+

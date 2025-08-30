@@ -15,6 +15,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import org.example.Maintenix.DAO.equipmentrequestdao;
 import org.example.Maintenix.DAO.staffdao;
+import org.example.Maintenix.Utils.UserSession;
 
 public class EquipmentRequestController implements Initializable {
 
@@ -36,21 +37,78 @@ public class EquipmentRequestController implements Initializable {
     @FXML
     private Button viewRequestsBtn;
 
+    // Optional: Add welcome label if it exists in FXML
+    @FXML
+    private Label welcomeLabel;
+
+    private staffdao staffDAO;
+    private equipmentrequestdao equipmentDAO;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Initialize DAOs
+        staffDAO = new staffdao();
+        equipmentDAO = new equipmentrequestdao();
+
         setupFormValidation();
-        loadStaffNames();
+        loadCurrentUserData();
         setupTypeCombo();
     }
 
-    private void loadStaffNames() {
+    /**
+     * Load current user's data and populate the staff name dropdown with only their name
+     */
+    private void loadCurrentUserData() {
+        UserSession session = UserSession.getInstance();
+
+        if (!session.isLoggedIn()) {
+            showAlert("Session Error", "No active user session found. Please log in again.");
+            redirectToLogin();
+            return;
+        }
+
         try {
-            staffdao dbdao = new staffdao();
-            ObservableList<String> staffNames = dbdao.getAllStaffNames();
-            staffNameCombo.setItems(staffNames);
+            String currentUsername = session.getCurrentUsername();
+            String currentUserFullName = session.getCurrentUserFullName();
+
+            // Set welcome message if label exists
+            if (welcomeLabel != null) {
+                welcomeLabel.setText("Welcome, " + currentUsername + "!");
+            }
+
+            // Create observable list with only current user's name
+            ObservableList<String> currentUserOnly = FXCollections.observableArrayList();
+
+            // If we have the full name from session, use it
+            if (currentUserFullName != null && !currentUserFullName.trim().isEmpty()) {
+                currentUserOnly.add(currentUserFullName);
+            } else {
+                // Fallback: get full name from database using username
+                String fullName = staffDAO.getFullNameByUsername(currentUsername);
+                if (fullName != null && !fullName.trim().isEmpty()) {
+                    currentUserOnly.add(fullName);
+                    // Update session with full name for future use
+                    session.setCurrentUser(currentUsername, fullName);
+                } else {
+                    // Ultimate fallback: use username
+                    currentUserOnly.add(currentUsername);
+                }
+            }
+
+            // Set the dropdown items and pre-select the user
+            staffNameCombo.setItems(currentUserOnly);
+            if (!currentUserOnly.isEmpty()) {
+                staffNameCombo.setValue(currentUserOnly.get(0));
+                // Disable the dropdown since there's only one option
+                staffNameCombo.setDisable(true);
+            }
+
+            System.out.println("Loaded current user: " + currentUsername);
+
         } catch (Exception e) {
-            System.err.println("Error loading staff names: " + e.getMessage());
-            showAlert("Error", "Could not load staff names. Please try again.");
+            System.err.println("Error loading current user data: " + e.getMessage());
+            showAlert("Error", "Could not load user information. Please try logging in again.");
+            e.printStackTrace();
         }
     }
 
@@ -75,15 +133,24 @@ public class EquipmentRequestController implements Initializable {
                 String itemName = itemNameField.getText().trim();
                 String description = descriptionArea.getText().trim();
 
-                // Create equipment request
-                equipmentrequestdao dbdao = new equipmentrequestdao();
-
-                boolean success = dbdao.createEquipmentRequest(staffName, type, itemName, description);
+                // Create equipment request using the logged-in user's information
+                boolean success = equipmentDAO.createEquipmentRequest(staffName, type, itemName, description);
 
                 if (success) {
                     showAlert("Success", "Equipment request submitted successfully!");
                     clearForm();
-                    viewRequests();
+
+                    // Ask user if they want to view their requests
+                    Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+                    confirmAlert.setTitle("Request Submitted");
+                    confirmAlert.setHeaderText("Equipment request submitted successfully!");
+                    confirmAlert.setContentText("Would you like to view your request history?");
+
+                    confirmAlert.showAndWait().ifPresent(response -> {
+                        if (response.getButtonData().isDefaultButton()) {
+                            viewRequests();
+                        }
+                    });
 
                 } else {
                     showAlert("Error", "Failed to submit equipment request. Please try again.");
@@ -112,8 +179,16 @@ public class EquipmentRequestController implements Initializable {
     }
 
     private boolean validateForm() {
+        // Check if user session is still valid
+        UserSession session = UserSession.getInstance();
+        if (!session.isLoggedIn()) {
+            showAlert("Session Error", "Your session has expired. Please log in again.");
+            redirectToLogin();
+            return false;
+        }
+
         if (staffNameCombo.getValue() == null || staffNameCombo.getValue().trim().isEmpty()) {
-            showAlert("Validation Error", "Please select a staff member.");
+            showAlert("Validation Error", "Staff name is required. Please log in again if this field is empty.");
             staffNameCombo.requestFocus();
             return false;
         }
@@ -146,7 +221,15 @@ public class EquipmentRequestController implements Initializable {
     }
 
     private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        Alert alert;
+        if (title.contains("Error")) {
+            alert = new Alert(Alert.AlertType.ERROR);
+        } else if (title.contains("Success")) {
+            alert = new Alert(Alert.AlertType.INFORMATION);
+        } else {
+            alert = new Alert(Alert.AlertType.INFORMATION);
+        }
+
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
@@ -154,13 +237,52 @@ public class EquipmentRequestController implements Initializable {
     }
 
     private void clearForm() {
-        staffNameCombo.setValue(null);
+        // Don't clear staff name since it's pre-filled with current user
         typeCombo.setValue(null);
         itemNameField.clear();
         descriptionArea.clear();
+
+        // Re-load current user data to ensure staff name is still populated
+        UserSession session = UserSession.getInstance();
+        if (session.isLoggedIn() && (staffNameCombo.getValue() == null || staffNameCombo.getValue().isEmpty())) {
+            loadCurrentUserData();
+        }
     }
 
-    // Getters for accessing form data
+    /**
+     * Redirect to login page if session is invalid
+     */
+    private void redirectToLogin() {
+        try {
+            // Clear the session
+            UserSession.getInstance().clearSession();
+
+            // Redirect to login page
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/View.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) submitRequestBtn.getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (IOException e) {
+            System.err.println("Error redirecting to login: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Method to refresh user data (can be called externally)
+     */
+    public void refreshUserData() {
+        loadCurrentUserData();
+    }
+
+    /**
+     * Check if current user session is valid
+     */
+    public boolean isSessionValid() {
+        UserSession session = UserSession.getInstance();
+        return session.isLoggedIn();
+    }
+
+    // Getters for accessing form data (keeping for backward compatibility)
     public String getStaffName() {
         return staffNameCombo.getValue();
     }
@@ -175,5 +297,11 @@ public class EquipmentRequestController implements Initializable {
 
     public String getDescription() {
         return descriptionArea.getText().trim();
+    }
+
+    // Method to get current user info
+    public String getCurrentUser() {
+        UserSession session = UserSession.getInstance();
+        return session.isLoggedIn() ? session.getCurrentUsername() : null;
     }
 }

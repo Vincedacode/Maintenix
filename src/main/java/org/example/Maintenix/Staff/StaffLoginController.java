@@ -12,6 +12,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
 
+
+import org.example.Maintenix.Utils.UserSession;
+
 import org.bson.Document;
 import org.example.Maintenix.DAO.staffdao;
 
@@ -75,28 +78,33 @@ public class StaffLoginController {
 
             try{
                 staffdao dbdao = new staffdao();
-                Document staffDoc = dbdao.loginStaff(email,password);
+                Document staffDoc = dbdao.loginStaff(email, password);
                 if(staffDoc != null){
                     String username = staffDoc.getString("Username");
+                    String fullName = staffDoc.getString("Fullname");
+
+                    // Set user session
+                    UserSession.getInstance().setCurrentUser(username, fullName);
+
                     showAlert("Success", "Login Successful!");
                     emailField.clear();
                     passwordField.clear();
+
                     try {
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/StaffDashboard.fxml"));
                         Parent root = loader.load();
-                        StaffDashboardController controller = loader.getController();
-                        controller.setUsername(username);
+                        // No need to pass username manually anymore - it's in the session
                         Stage stage = (Stage) loginBtn.getScene().getWindow();
                         stage.setScene(new Scene(root));
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
                     return;
-                }else {
+                } else {
                     showAlert("Invalid Login Details", "Account not found!");
                     return;
                 }
-            }catch (Exception ex){
+            } catch (Exception ex){
                 System.out.println(ex.getMessage());
             }
 

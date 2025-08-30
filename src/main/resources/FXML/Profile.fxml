@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane stylesheets="@/Styles/profilestyle.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Maintenix.Staff.ProfileController">
+    <left>
+        <VBox styleClass="sidebar" BorderPane.alignment="CENTER">
+            <children>
+                <!-- Logo Section -->
+                <HBox styleClass="logo-section" alignment="CENTER_LEFT">
+                    <children>
+                        <ImageView fitHeight="100" fitWidth="150" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/logo.png" />
+                            </image>
+                        </ImageView>
+                        <Label styleClass="logo-text" text="">
+                            <font>
+                                <Font name="System Bold" size="18.0" />
+                            </font>
+                        </Label>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="30.0" />
+                    </VBox.margin>
+                </HBox>
+
+                <!-- Navigation Menu -->
+                <VBox styleClass="nav-menu" spacing="5.0">
+                    <children>
+                        <Button fx:id="dashboardBtn" styleClass="nav-item" text="📊 Overview" />
+                        <Button fx:id="devicesBtn" styleClass="nav-item" text="📱 Devices" />
+                        <Button fx:id="historyBtn" styleClass="nav-item" text="⚙️ History" />
+                        <Button fx:id="usageBtn" styleClass="nav-item2" text="" />
+                    </children>
+                </VBox>
+
+                <!-- Bottom Navigation -->
+                <Region VBox.vgrow="ALWAYS" />
+                <VBox spacing="5.0">
+                    <children>
+                        <Button fx:id="profileBtn" styleClass="nav-item,nav-active" text="👤 My Profile" />
+                        <Button fx:id="signOutBtn" styleClass="nav-item" text="🚪 Sign Out" />
+                    </children>
+                </VBox>
+            </children>
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+        </VBox>
+    </left>
+
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="main-scroll">
+            <content>
+                <VBox styleClass="main-content" BorderPane.alignment="CENTER">
+                    <children>
+                        <!-- Header -->
+                        <HBox styleClass="header" alignment="CENTER_LEFT">
+                            <children>
+                                <VBox HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="page-title" text="My Profile">
+                                            <font>
+                                                <Font name="System Bold" size="36.0" />
+                                            </font>
+                                        </Label>
+                                        <Label fx:id="welcomeLabel" styleClass="welcome-text" text="Profile Information" />
+                                    </children>
+                                </VBox>
+                            </children>
+                            <VBox.margin>
+                                <Insets bottom="30.0" />
+                            </VBox.margin>
+                        </HBox>
+
+                        <!-- Profile Content -->
+                        <VBox styleClass="profile-container" spacing="30.0">
+                            <children>
+                                <!-- Profile Avatar Section -->
+                                <HBox styleClass="profile-avatar-section" alignment="CENTER">
+                                    <children>
+                                        <VBox styleClass="avatar-container" alignment="CENTER" spacing="15.0">
+                                            <children>
+                                                <!-- Profile Avatar Circle -->
+                                                <StackPane styleClass="profile-avatar">
+                                                    <children>
+                                                        <Label fx:id="profileInitialsLabel" styleClass="profile-initials" text="JD">
+                                                            <font>
+                                                                <Font name="System Bold" size="48.0" />
+                                                            </font>
+                                                        </Label>
+                                                    </children>
+                                                </StackPane>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+
+                                <!-- Profile Information Cards -->
+                                <GridPane styleClass="profile-grid" hgap="20.0" vgap="20.0">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                    </rowConstraints>
+
+                                    <!-- Full Name Card -->
+                                    <VBox styleClass="info-card" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                        <children>
+                                            <Label styleClass="info-label" text="Full Name">
+                                                <font>
+                                                    <Font name="System Bold" size="14.0" />
+                                                </font>
+                                            </Label>
+                                            <Label fx:id="fullNameLabel" styleClass="info-value" text="John Doe">
+                                                <font>
+                                                    <Font size="18.0" />
+                                                </font>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+
+                                    <!-- Username Card -->
+                                    <VBox styleClass="info-card" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                        <children>
+                                            <Label styleClass="info-label" text="Username">
+                                                <font>
+                                                    <Font name="System Bold" size="14.0" />
+                                                </font>
+                                            </Label>
+                                            <Label fx:id="usernameLabel" styleClass="info-value" text="john.doe">
+                                                <font>
+                                                    <Font size="18.0" />
+                                                </font>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+
+                                    <!-- Email Card -->
+                                    <VBox styleClass="info-card" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                                        <children>
+                                            <Label styleClass="info-label" text="Email Address">
+                                                <font>
+                                                    <Font name="System Bold" size="14.0" />
+                                                </font>
+                                            </Label>
+                                            <Label fx:id="emailLabel" styleClass="info-value" text="john.doe@company.com">
+                                                <font>
+                                                    <Font size="18.0" />
+                                                </font>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+
+                                    <!-- Department Card -->
+                                    <VBox styleClass="info-card" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                        <children>
+                                            <Label styleClass="info-label" text="Department">
+                                                <font>
+                                                    <Font name="System Bold" size="14.0" />
+                                                </font>
+                                            </Label>
+                                            <Label fx:id="departmentLabel" styleClass="info-value" text="IT Department">
+                                                <font>
+                                                    <Font size="18.0" />
+                                                </font>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                </GridPane>
+
+                                <!-- Additional Information Section -->
+                                <VBox styleClass="additional-info-section" spacing="15.0">
+                                    <children>
+                                        <Label styleClass="section-title" text="Account Information">
+                                            <font>
+                                                <Font name="System Bold" size="20.0" />
+                                            </font>
+                                        </Label>
+
+                                        <VBox styleClass="account-info-card" spacing="10.0">
+                                            <children>
+                                                <HBox styleClass="info-row" alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children>
+                                                        <Label styleClass="info-icon" text="🔐" />
+                                                        <VBox HBox.hgrow="ALWAYS">
+                                                            <children>
+                                                                <Label styleClass="info-label" text="Account Status" />
+                                                                <Label styleClass="info-value,status-active" text="Active" />
+                                                            </children>
+                                                        </VBox>
+                                                    </children>
+                                                </HBox>
+
+                                                <Separator styleClass="info-separator" />
+
+                                                <HBox styleClass="info-row" alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children>
+                                                        <Label styleClass="info-icon" text="📅" />
+                                                        <VBox HBox.hgrow="ALWAYS">
+                                                            <children>
+                                                                <Label styleClass="info-label" text="Member Since" />
+                                                                <Label fx:id="memberSinceLabel" styleClass="info-value" text="" />
+                                                            </children>
+                                                        </VBox>
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </VBox>
+
+                            </children>
+                        </VBox>
+                    </children>
+                    <padding>
+                        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+                    </padding>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+</BorderPane>

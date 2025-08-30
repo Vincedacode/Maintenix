@@ -56,202 +56,199 @@
     </left>
 
     <center>
+        <ScrollPane fitToWidth="true" styleClass="main-scroll">
+            <content>
+                <VBox styleClass="main-content" BorderPane.alignment="CENTER">
+                    <children>
+                        <!-- Header -->
+                        <HBox styleClass="header" alignment="CENTER_LEFT">
+                            <children>
+                                <VBox HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="page-title" text="Dashboard">
+                                            <font>
+                                                <Font name="System Bold" size="32.0" />
+                                            </font>
+                                        </Label>
+                                        <Label fx:id="welcomeLabel" styleClass="welcome-text" text="Welcome, " />
+                                    </children>
+                                </VBox>
+                                <Button fx:id="reportIssueBtn" styleClass="report-btn" text="Report issue" />
+                            </children>
+                            <VBox.margin>
+                                <Insets bottom="30.0" />
+                            </VBox.margin>
+                        </HBox>
 
-       <ScrollPane fitToWidth="true" styleClass="main-scroll">
-           <content>
-               <VBox styleClass="main-content" BorderPane.alignment="CENTER">
-                   <children>
-                       <!-- Header -->
-                       <HBox styleClass="header" alignment="CENTER_LEFT">
-                           <children>
-                               <VBox HBox.hgrow="ALWAYS">
-                                   <children>
-                                       <Label styleClass="page-title" text="Dashboard">
-                                           <font>
-                                               <Font name="System Bold" size="32.0" />
-                                           </font>
-                                       </Label>
-                                       <Label fx:id="welcomeLabel" styleClass="welcome-text" text="Welcome, " />
-                                   </children>
-                               </VBox>
-                               <Button fx:id="reportIssueBtn" styleClass="report-btn" text="Report issue" />
-                           </children>
-                           <VBox.margin>
-                               <Insets bottom="30.0" />
-                           </VBox.margin>
-                       </HBox>
+                        <!-- Device Status Cards -->
+                        <GridPane styleClass="cards-grid" hgap="20.0" vgap="20.0">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                            </rowConstraints>
 
-                       <!-- Device Status Cards -->
-                       <GridPane styleClass="cards-grid" hgap="20.0" vgap="20.0">
-                           <columnConstraints>
-                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                           </columnConstraints>
-                           <rowConstraints>
-                               <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                               <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                           </rowConstraints>
+                            <!-- Printer Card -->
+                            <VBox styleClass="status-card,printer-card" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                <children>
+                                    <HBox alignment="CENTER_LEFT">
+                                        <children>
+                                            <VBox HBox.hgrow="ALWAYS">
+                                                <children>
+                                                    <Label fx:id="printerTitleLabel" styleClass="card-title" text="Printer">
+                                                        <font>
+                                                            <Font name="System Bold" size="24.0" />
+                                                        </font>
+                                                    </Label>
+                                                    <Label styleClass="card-status-label" text="Status" />
+                                                    <Label fx:id="printerStatusLabel" styleClass="card-status" text="Pending">
+                                                        <font>
+                                                            <Font name="System Bold" size="20.0" />
+                                                        </font>
+                                                    </Label>
+                                                </children>
+                                            </VBox>
+                                            <ImageView fx:id="printerImageView" fitHeight="60.0" fitWidth="60.0" preserveRatio="true" styleClass="card-icon">
+                                                <image>
+                                                    <Image url="@/images/logo.png" />
+                                                </image>
+                                            </ImageView>
+                                        </children>
+                                    </HBox>
+                                </children>
+                            </VBox>
 
-                           <!-- Printer Card -->
-                           <VBox styleClass="status-card,printer-card" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                               <children>
-                                   <HBox alignment="CENTER_LEFT">
-                                       <children>
-                                           <VBox HBox.hgrow="ALWAYS">
-                                               <children>
-                                                   <Label styleClass="card-title" text="Printer">
-                                                       <font>
-                                                           <Font name="System Bold" size="24.0" />
-                                                       </font>
-                                                   </Label>
-                                                   <Label styleClass="card-status-label" text="Status" />
-                                                   <Label styleClass="card-status" text="Pending">
-                                                       <font>
-                                                           <Font name="System Bold" size="20.0" />
-                                                       </font>
-                                                   </Label>
-                                               </children>
-                                           </VBox>
-                                           <ImageView fitHeight="60.0" fitWidth="60.0" preserveRatio="true" styleClass="card-icon">
-                                               <image>
-                                                   <Image url="@/images/logo.png" />
-                                               </image>
-                                           </ImageView>
-                                       </children>
-                                   </HBox>
-                               </children>
-                           </VBox>
+                            <!-- Monitor Card -->
+                            <VBox styleClass="status-card,monitor-card" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                <children>
+                                    <HBox alignment="CENTER_LEFT">
+                                        <children>
+                                            <VBox HBox.hgrow="ALWAYS">
+                                                <children>
+                                                    <Label fx:id="monitorTitleLabel" styleClass="card-title" text="Monitor">
+                                                        <font>
+                                                            <Font name="System Bold" size="24.0" />
+                                                        </font>
+                                                    </Label>
+                                                    <Label styleClass="card-status-label" text="Status" />
+                                                    <Label fx:id="monitorStatusLabel" styleClass="card-status" text="Active">
+                                                        <font>
+                                                            <Font name="System Bold" size="20.0" />
+                                                        </font>
+                                                    </Label>
+                                                </children>
+                                            </VBox>
+                                            <ImageView fx:id="monitorImageView" fitHeight="60.0" fitWidth="60.0" preserveRatio="true" styleClass="card-icon">
+                                                <image>
+                                                    <Image url="@/images/logo.png" />
+                                                </image>
+                                            </ImageView>
+                                        </children>
+                                    </HBox>
+                                </children>
+                            </VBox>
 
-                           <!-- Monitor Card -->
-                           <VBox styleClass="status-card,monitor-card" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                               <children>
-                                   <HBox alignment="CENTER_LEFT">
-                                       <children>
-                                           <VBox HBox.hgrow="ALWAYS">
-                                               <children>
-                                                   <Label styleClass="card-title" text="Monitor">
-                                                       <font>
-                                                           <Font name="System Bold" size="24.0" />
-                                                       </font>
-                                                   </Label>
-                                                   <Label styleClass="card-status-label" text="Status" />
-                                                   <Label styleClass="card-status" text="Active">
-                                                       <font>
-                                                           <Font name="System Bold" size="20.0" />
-                                                       </font>
-                                                   </Label>
-                                               </children>
-                                           </VBox>
-                                           <ImageView fitHeight="60.0" fitWidth="60.0" preserveRatio="true" styleClass="card-icon">
-                                               <image>
-                                                   <Image url="@/images/logo.png" />
-                                               </image>
-                                           </ImageView>
-                                       </children>
-                                   </HBox>
-                               </children>
-                           </VBox>
+                            <!-- Desk Lamp Card -->
+                            <VBox styleClass="status-card,desk-lamp-card" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                                <children>
+                                    <HBox alignment="CENTER_LEFT">
+                                        <children>
+                                            <VBox HBox.hgrow="ALWAYS">
+                                                <children>
+                                                    <Label fx:id="deskLampTitleLabel" styleClass="card-title" text="Desk Lamp">
+                                                        <font>
+                                                            <Font name="System Bold" size="24.0" />
+                                                        </font>
+                                                    </Label>
+                                                    <Label styleClass="card-status-label" text="Status" />
+                                                    <Label fx:id="deskLampStatusLabel" styleClass="card-status" text="Resolved">
+                                                        <font>
+                                                            <Font name="System Bold" size="20.0" />
+                                                        </font>
+                                                    </Label>
+                                                </children>
+                                            </VBox>
+                                            <ImageView fx:id="deskLampImageView" fitHeight="60.0" fitWidth="60.0" preserveRatio="true" styleClass="card-icon">
+                                                <image>
+                                                    <Image url="@/images/logo.png" />
+                                                </image>
+                                            </ImageView>
+                                        </children>
+                                    </HBox>
+                                </children>
+                            </VBox>
 
-                           <!-- Desk Lamp Card -->
-                           <VBox styleClass="status-card,desk-lamp-card" GridPane.columnIndex="2" GridPane.rowIndex="0">
-                               <children>
-                                   <HBox alignment="CENTER_LEFT">
-                                       <children>
-                                           <VBox HBox.hgrow="ALWAYS">
-                                               <children>
-                                                   <Label styleClass="card-title" text="Desk Lamp">
-                                                       <font>
-                                                           <Font name="System Bold" size="24.0" />
-                                                       </font>
-                                                   </Label>
-                                                   <Label styleClass="card-status-label" text="Status" />
-                                                   <Label styleClass="card-status" text="Resolved">
-                                                       <font>
-                                                           <Font name="System Bold" size="20.0" />
-                                                       </font>
-                                                   </Label>
-                                               </children>
-                                           </VBox>
-                                           <ImageView fitHeight="60.0" fitWidth="60.0" preserveRatio="true" styleClass="card-icon">
-                                               <image>
-                                                   <Image url="@/images/logo.png" />
-                                               </image>
-                                           </ImageView>
-                                       </children>
-                                   </HBox>
-                               </children>
-                           </VBox>
+                            <!-- Updates Card -->
+                            <VBox styleClass="status-card,updates-card" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                                <children>
+                                    <Label styleClass="card-title" text="Updates">
+                                        <font>
+                                            <Font name="System Bold" size="20.0" />
+                                        </font>
+                                    </Label>
+                                    <VBox styleClass="update-content" alignment="CENTER" VBox.vgrow="ALWAYS">
+                                        <children>
+                                            <ImageView fitHeight="80.0" fitWidth="80.0" preserveRatio="true">
+                                                <image>
+                                                    <Image url="@/images/logo.png" />
+                                                </image>
+                                            </ImageView>
+                                            <Label styleClass="update-text" text="UPDATE">
+                                                <font>
+                                                    <Font name="System Bold" size="24.0" />
+                                                </font>
+                                            </Label>
+                                            <Label styleClass="update-time" text="12:00Am">
+                                                <font>
+                                                    <Font size="14.0" />
+                                                </font>
+                                            </Label>
+                                            <Label styleClass="update-action" text="Reboot">
+                                                <font>
+                                                    <Font name="System Bold" size="16.0" />
+                                                </font>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                </children>
+                            </VBox>
 
-                           <!-- Updates Card -->
-                           <VBox styleClass="status-card,updates-card" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                               <children>
-                                   <Label styleClass="card-title" text="Updates">
-                                       <font>
-                                           <Font name="System Bold" size="20.0" />
-                                       </font>
-                                   </Label>
-                                   <VBox styleClass="update-content" alignment="CENTER" VBox.vgrow="ALWAYS">
-                                       <children>
-                                           <ImageView fitHeight="80.0" fitWidth="80.0" preserveRatio="true">
-                                               <image>
-                                                   <Image url="@/images/logo.png" />
-                                               </image>
-                                           </ImageView>
-                                           <Label styleClass="update-text" text="UPDATE">
-                                               <font>
-                                                   <Font name="System Bold" size="24.0" />
-                                               </font>
-                                           </Label>
-                                           <Label styleClass="update-time" text="12:00Am">
-                                               <font>
-                                                   <Font size="14.0" />
-                                               </font>
-                                           </Label>
-                                           <Label styleClass="update-action" text="Reboot">
-                                               <font>
-                                                   <Font name="System Bold" size="16.0" />
-                                               </font>
-                                           </Label>
-                                       </children>
-                                   </VBox>
-                               </children>
-                           </VBox>
+                            <!-- AC and Fan Card -->
+                            <VBox styleClass="status-card,ac-fan-card" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                <children>
+                                    <HBox alignment="CENTER_LEFT">
+                                        <children>
+                                            <VBox HBox.hgrow="ALWAYS">
+                                                <children>
+                                                    <Label text="Request New Device" styleClass="card-title"/>
 
-                           <!-- AC and Fan Card -->
-                           <!-- AC and Fan Card -->
-                           <VBox styleClass="status-card,ac-fan-card" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
-                               <children>
-                                   <HBox alignment="CENTER_LEFT">
-                                       <children>
-                                           <VBox HBox.hgrow="ALWAYS">
-                                               <children>
-                                                   <Label text="Request New Device" styleClass="card-title"/>
+                                                    <!-- Request Button Container -->
+                                                    <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                        <children>
+                                                            <Button fx:id="requestBtn" onAction="#requestDevice" styleClass="request-btn" text="Request" />
+                                                        </children>
+                                                        <VBox.margin>
+                                                            <Insets bottom="10.0" top="40.0" />
+                                                        </VBox.margin>
+                                                    </HBox>
+                                                </children>
+                                            </VBox>
+                                        </children>
+                                    </HBox>
+                                </children>
+                            </VBox>
 
-
-                                                   <!-- Request Button Container -->
-                                                   <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                                       <children>
-                                                           <Button fx:id="requestBtn" onAction="#requestDevice" styleClass="request-btn" text="Request" />
-                                                       </children>
-                                                       <VBox.margin>
-                                                           <Insets bottom="10.0" top="40.0" />
-                                                       </VBox.margin>
-                                                   </HBox>
-                                               </children>
-                                           </VBox>
-                                       </children>
-                                   </HBox>
-                               </children>
-                           </VBox>
-
-                       </GridPane>
-                   </children>
-                   <padding>
-                       <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
-                   </padding>
-               </VBox>
-           </content>
-       </ScrollPane>
+                        </GridPane>
+                    </children>
+                    <padding>
+                        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+                    </padding>
+                </VBox>
+            </content>
+        </ScrollPane>
     </center>
 </BorderPane>

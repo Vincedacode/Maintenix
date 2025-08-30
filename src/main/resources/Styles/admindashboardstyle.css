@@ -1,0 +1,268 @@
+/* Root styling */
+.root {
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-background-color: #f5f7fa;
+}
+
+/* Sidebar styling */
+.sidebar {
+    -fx-background-color: #e8ecf0;
+    -fx-min-width: 200px;
+    -fx-max-width: 200px;
+    -fx-border-color: #d1d9e0;
+    -fx-border-width: 0 1px 0 0;
+}
+
+.logo-section {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d1d9e0;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.logo-text {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1976d2;
+}
+
+.nav-menu {
+    -fx-spacing: 5px;
+    -fx-padding: 20 0 0 0;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #666666;
+    -fx-font-size: 14px;
+    -fx-padding: 12 20 12 20;
+    -fx-border-width: 0;
+    -fx-cursor: hand;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.nav-button:hover {
+    -fx-background-color: #f0f4f8;
+}
+
+.nav-active {
+    -fx-background-color: #1976d2;
+    -fx-text-fill: white;
+}
+
+.logout-button {
+    -fx-text-fill: #888888;
+}
+
+/* Main content area */
+.main-content {
+    -fx-background-color: #f5f7fa;
+}
+
+.header {
+    -fx-background-color: #1976d2;
+    -fx-min-height: 80px;
+}
+
+.welcome-text {
+    -fx-text-fill: white;
+    -fx-font-size: 24px;
+    -fx-font-weight: normal;
+}
+
+.user-name {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.user-role {
+    -fx-text-fill: #bbdefb;
+    -fx-font-size: 12px;
+    -fx-padding: 0 0 0 5;
+}
+
+.user-avatar {
+    -fx-background-color: #90caf9;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-max-width: 40px;
+    -fx-max-height: 40px;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-border-color: white;
+    -fx-border-width: 2px;
+}
+
+/* Dashboard content */
+.dashboard-content {
+    -fx-padding: 0 0 30 0;
+}
+
+.section {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 2);
+}
+
+.section-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+.sort-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #1976d2;
+    -fx-font-size: 12px;
+    -fx-border-width: 0;
+    -fx-cursor: hand;
+}
+
+.sort-button:hover {
+    -fx-text-fill: #1565c0;
+}
+
+/* Table styling */
+.request-table {
+    -fx-background-color: white;
+    -fx-border-width: 0;
+}
+
+.request-table .column-header {
+    -fx-background-color: #1976d2;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-padding: 10 15 10 15;
+}
+
+.request-table .column-header-background {
+    -fx-background-color: #1976d2;
+}
+
+.request-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: #f0f0f0;
+    -fx-border-width: 0 0 1px 0;
+    -fx-padding: 8 0 8 0;
+}
+
+.request-table .table-row-cell:hover {
+    -fx-background-color: #f8f9fa;
+}
+
+.request-table .table-cell {
+    -fx-padding: 8 15 8 15;
+    -fx-font-size: 13px;
+}
+
+/* Priority and status labels */
+.priority-high {
+    -fx-text-fill: #d32f2f;
+    -fx-font-weight: bold;
+}
+
+.priority-medium {
+    -fx-text-fill: #f57c00;
+    -fx-font-weight: bold;
+}
+
+.priority-low {
+    -fx-text-fill: #1976d2;
+    -fx-font-weight: bold;
+}
+
+.status-done {
+    -fx-text-fill: #388e3c;
+    -fx-font-weight: bold;
+}
+
+.status-idle {
+    -fx-text-fill: #f57c00;
+    -fx-font-weight: bold;
+}
+
+.status-pending {
+    -fx-text-fill: #666666;
+    -fx-font-weight: bold;
+}
+
+/* Action buttons */
+.action-button {
+    -fx-font-size: 12px;
+    -fx-padding: 8 16 8 16;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+
+.print-button {
+    -fx-background-color: #1976d2;
+    -fx-text-fill: white;
+    -fx-border-width: 0;
+}
+
+.print-button:hover {
+    -fx-background-color: #1565c0;
+}
+
+.share-button {
+    -fx-background-color: #1976d2;
+    -fx-text-fill: white;
+    -fx-border-width: 0;
+}
+
+.share-button:hover {
+    -fx-background-color: #1565c0;
+}
+
+.bottom-button {
+    -fx-background-color: #1976d2;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-padding: 10 20 10 20;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-border-width: 0;
+    -fx-cursor: hand;
+}
+
+.bottom-button:hover {
+    -fx-background-color: #1565c0;
+}
+
+/* Show all link */
+.show-all-link {
+    -fx-text-fill: #1976d2;
+    -fx-font-size: 13px;
+    -fx-underline: false;
+}
+
+.show-all-link:hover {
+    -fx-text-fill: #1565c0;
+    -fx-underline: true;
+}
+
+/* Device name and requester styling */
+.device-name {
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-text-fill: #333333;
+}
+
+.requester-name {
+    -fx-font-size: 11px;
+    -fx-text-fill: #666666;
+}
+
+/* Date and time styling */
+.date-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: #333333;
+}
+
+.time-text {
+    -fx-font-size: 11px;
+    -fx-text-fill: #666666;
+}

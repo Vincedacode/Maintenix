@@ -114,7 +114,7 @@ public class EquipmentRequestController implements Initializable {
 
     private void setupTypeCombo() {
         ObservableList<String> types = FXCollections.observableArrayList();
-        types.addAll("hardware", "software");
+        types.addAll("Hardware", "Software");
         typeCombo.setItems(types);
     }
 

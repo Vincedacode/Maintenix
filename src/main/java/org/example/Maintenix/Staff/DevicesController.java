@@ -135,6 +135,7 @@ public class DevicesController implements Initializable {
                     activeCount++;
                     break;
                 case "pending":
+                case "in_progress":
                 case "submitted":
                     pendingCount++;
                     break;

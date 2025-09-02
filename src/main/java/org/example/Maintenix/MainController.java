@@ -27,7 +27,7 @@ public class MainController {
         // Button Actions
         adminBtn.setOnAction(e -> {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/AdminLogin.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Statistics.fxml"));
                 Parent root = loader.load();
                 Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
                 stage.setScene(new Scene(root));

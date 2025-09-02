@@ -1,0 +1,285 @@
+/* Root styling */
+.root {
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-background-color: #f5f7fa;
+}
+
+/* Sidebar styling - same as dashboard */
+.sidebar {
+    -fx-background-color: #e8ecf0;
+    -fx-min-width: 200px;
+    -fx-max-width: 200px;
+    -fx-border-color: #d1d9e0;
+    -fx-border-width: 0 1px 0 0;
+}
+
+.logo-section {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d1d9e0;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.logo-text {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1976d2;
+}
+
+.nav-menu {
+    -fx-spacing: 5px;
+    -fx-padding: 20 0 0 0;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #666666;
+    -fx-font-size: 14px;
+    -fx-padding: 12 20 12 20;
+    -fx-border-width: 0;
+    -fx-cursor: hand;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.nav-button:hover {
+    -fx-background-color: #f0f4f8;
+}
+
+.nav-active {
+    -fx-background-color: #1976d2;
+    -fx-text-fill: white;
+}
+
+.logout-button {
+    -fx-text-fill: #888888;
+}
+
+/* Main content area */
+.main-content {
+    -fx-background-color: #f5f7fa;
+}
+
+.header {
+    -fx-background-color: #1976d2;
+    -fx-min-height: 80px;
+}
+
+.welcome-text {
+    -fx-text-fill: white;
+    -fx-font-size: 24px;
+    -fx-font-weight: normal;
+}
+
+.user-name {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.user-role {
+    -fx-text-fill: #bbdefb;
+    -fx-font-size: 12px;
+    -fx-padding: 0 0 0 5;
+}
+
+.user-avatar {
+    -fx-background-color: #90caf9;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-max-width: 40px;
+    -fx-max-height: 40px;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-border-color: white;
+    -fx-border-width: 2px;
+}
+
+/* Statistics specific styles */
+.stats-scroll {
+    -fx-background-color: #f5f7fa;
+    -fx-background: #f5f7fa;
+}
+
+.stats-container {
+    -fx-background-color: #f5f7fa;
+}
+
+/* Date Range Selection */
+.date-range-container {
+    -fx-background-color: transparent;
+}
+
+.period-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+.date-button {
+    -fx-background-color: #1976d2;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-padding: 8 16 8 16;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-border-width: 0;
+    -fx-cursor: hand;
+}
+
+.date-button:hover {
+    -fx-background-color: #1565c0;
+}
+
+/* Statistics Cards */
+.stat-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 2);
+    -fx-min-height: 120px;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.primary-card {
+    -fx-background-color: #1976d2;
+}
+
+.secondary-card {
+    -fx-background-color: #1976d2;
+}
+
+.card-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+    -fx-text-fill: white;
+    -fx-opacity: 0.9;
+}
+
+.card-value {
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 0 0 0;
+}
+
+.primary-value {
+    -fx-text-fill: white;
+}
+
+.secondary-value {
+    -fx-text-fill: white;
+}
+
+/* Chart Containers */
+.chart-container {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 2);
+}
+
+.chart-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-padding: 0 0 10 0;
+}
+
+/* Pie Chart Styling */
+.priority-pie-chart {
+    -fx-max-height: 300px;
+    -fx-min-height: 300px;
+    -fx-legend-side: bottom;
+    -fx-legend-visible: true;
+}
+
+.priority-pie-chart .chart-pie-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.priority-pie-chart .chart-legend {
+    -fx-background-color: transparent;
+    -fx-padding: 10 0 0 0;
+}
+
+.priority-pie-chart .chart-legend-item {
+    -fx-font-size: 12px;
+}
+
+/* Custom pie chart colors for priority levels */
+.default-color0.chart-pie { -fx-pie-color: #1976d2; } /* High */
+.default-color1.chart-pie { -fx-pie-color: #333333; } /* Medium */
+.default-color2.chart-pie { -fx-pie-color: #4285f4; } /* Low */
+
+/* Bar Chart Styling */
+.monthly-chart {
+    -fx-max-height: 250px;
+    -fx-min-height: 250px;
+    -fx-legend-visible: false;
+}
+
+.monthly-chart .chart-plot-background {
+    -fx-background-color: white;
+}
+
+.monthly-chart .chart-vertical-grid-lines {
+    -fx-stroke: #e0e0e0;
+    -fx-stroke-width: 1;
+}
+
+.monthly-chart .chart-horizontal-grid-lines {
+    -fx-stroke: #e0e0e0;
+    -fx-stroke-width: 1;
+}
+
+.monthly-chart .chart-alternative-row-fill {
+    -fx-fill: #fafafa;
+    -fx-stroke: transparent;
+}
+
+.monthly-chart .axis {
+    -fx-tick-label-font-size: 10px;
+    -fx-tick-label-fill: #666666;
+}
+
+.monthly-chart .axis-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #333333;
+}
+
+/* Bar colors */
+.monthly-chart .default-color0.chart-bar {
+    -fx-bar-fill: #1976d2;
+}
+
+.monthly-chart .default-color0.chart-bar:hover {
+    -fx-bar-fill: #1565c0;
+}
+
+/* Responsive adjustments */
+.stat-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 6, 0, 0, 3);
+}
+
+.chart-container:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 6, 0, 0, 3);
+}
+
+/* ScrollPane styling */
+.stats-scroll > .viewport {
+    -fx-background-color: #f5f7fa;
+}
+
+.stats-scroll > .scroll-bar:vertical {
+    -fx-background-color: #f5f7fa;
+    -fx-pref-width: 8px;
+}
+
+.stats-scroll > .scroll-bar:vertical > .track {
+    -fx-background-color: #e0e0e0;
+    -fx-background-radius: 4px;
+}
+
+.stats-scroll > .scroll-bar:vertical > .thumb {
+    -fx-background-color: #1976d2;
+    -fx-background-radius: 4px;
+}

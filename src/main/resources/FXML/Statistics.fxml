@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.chart.*?>
+
+<BorderPane stylesheets="@/Styles/statisticsstyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Maintenix.Admin.StatisticsController">
+    <left>
+        <VBox styleClass="sidebar" BorderPane.alignment="CENTER">
+            <children>
+                <!-- Logo Section -->
+                <HBox styleClass="logo-section" alignment="CENTER_LEFT">
+                    <children>
+                        <ImageView fitWidth="100" fitHeight="150" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/logo.png" />
+                            </image>
+                        </ImageView>
+                    </children>
+                    <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                    </padding>
+                </HBox>
+
+                <!-- Navigation Menu -->
+                <VBox styleClass="nav-menu">
+                    <children>
+                        <Button fx:id="dashboardBtn" text="📊 Dashboard" styleClass="nav-button" maxWidth="Infinity" />
+                        <Button fx:id="statisticsBtn" text="📈 Statistics" styleClass="nav-button, nav-active" maxWidth="Infinity" />
+                        <Button fx:id="notificationsBtn" text="🔔 Notifications" styleClass="nav-button" maxWidth="Infinity" />
+                    </children>
+                    <padding>
+                        <Insets left="10.0" right="10.0" />
+                    </padding>
+                </VBox>
+
+                <Region VBox.vgrow="ALWAYS" />
+
+                <!-- Logout Button -->
+                <Button fx:id="logoutBtn" text="🚪 Log Out" styleClass="nav-button, logout-button" maxWidth="Infinity">
+                    <VBox.margin>
+                        <Insets bottom="20.0" left="10.0" right="10.0" />
+                    </VBox.margin>
+                </Button>
+            </children>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox styleClass="main-content">
+            <children>
+                <!-- Header -->
+                <HBox styleClass="header" alignment="CENTER_LEFT">
+                    <children>
+                        <Label fx:id="welcomeLabel" text="Welcome back, Toluwani" styleClass="welcome-text" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label fx:id="userNameLabel" text="Toluwani" styleClass="user-name" />
+                        <Label text="" styleClass="user-role" />
+                        <Region styleClass="user-avatar" />
+                    </children>
+                    <padding>
+                        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+                    </padding>
+                </HBox>
+
+                <!-- Statistics Content -->
+                <ScrollPane styleClass="stats-scroll" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
+                    <content>
+                        <VBox styleClass="stats-container" spacing="20.0">
+                            <children>
+                                <!-- Date Range Selection -->
+                                <HBox styleClass="date-range-container" spacing="10.0" alignment="CENTER_LEFT">
+                                    <children>
+                                        <Label text="Select period:" styleClass="period-label" />
+                                        <Button fx:id="fromDateBtn" text="from Jan 1, 2025" styleClass="date-button" />
+                                        <Button fx:id="toDateBtn" text="to Dec 31, 2025" styleClass="date-button" />
+                                    </children>
+                                    <padding>
+                                        <Insets bottom="10.0" left="30.0" right="30.0" top="10.0" />
+                                    </padding>
+                                </HBox>
+
+                                <!-- Top Stats Cards Row -->
+                                <HBox spacing="20.0" alignment="CENTER">
+                                    <children>
+                                        <!-- Total Devices Card -->
+                                        <VBox styleClass="stat-card, primary-card" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label text="Total Devices" styleClass="card-title" />
+                                                <Label fx:id="totalDevicesLabel" text="80" styleClass="card-value, primary-value" />
+                                            </children>
+                                            <padding>
+                                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                            </padding>
+                                        </VBox>
+
+                                        <!-- Inactive Devices Percentage Card -->
+                                        <VBox styleClass="stat-card, secondary-card" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label text="Inactive Devices (%)" styleClass="card-title" />
+                                                <Label fx:id="inactivePercentageLabel" text="36.2%" styleClass="card-value, secondary-value" />
+                                            </children>
+                                            <padding>
+                                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                            </padding>
+                                        </VBox>
+
+                                        <!-- Number of Inactive Devices Card -->
+                                        <VBox styleClass="stat-card, secondary-card" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label text="Number of Inactive Devices" styleClass="card-title" />
+                                                <Label fx:id="inactiveCountLabel" text="36" styleClass="card-value, secondary-value" />
+                                            </children>
+                                            <padding>
+                                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                            </padding>
+                                        </VBox>
+                                    </children>
+                                    <padding>
+                                        <Insets left="30.0" right="30.0" />
+                                    </padding>
+                                </HBox>
+
+                                <!-- Charts Row -->
+                                <HBox spacing="20.0" alignment="TOP_CENTER">
+                                    <children>
+                                        <!-- Priority Breakdown Pie Chart -->
+                                        <VBox styleClass="chart-container" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label text="Total Breakdown (by Priority)" styleClass="chart-title" />
+                                                <PieChart fx:id="priorityPieChart" styleClass="priority-pie-chart" />
+                                            </children>
+                                            <padding>
+                                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                            </padding>
+                                        </VBox>
+
+                                        <!-- Monthly Charts Container -->
+                                        <VBox spacing="20.0" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <!-- Inactive Devices per Month -->
+                                                <VBox styleClass="chart-container">
+                                                    <children>
+                                                        <Label text="Inactive Devices per month" styleClass="chart-title" />
+                                                        <BarChart fx:id="inactiveDevicesChart" styleClass="monthly-chart">
+                                                            <xAxis>
+                                                                <CategoryAxis fx:id="inactiveXAxis" />
+                                                            </xAxis>
+                                                            <yAxis>
+                                                                <NumberAxis fx:id="inactiveYAxis" />
+                                                            </yAxis>
+                                                        </BarChart>
+                                                    </children>
+                                                    <padding>
+                                                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                                    </padding>
+                                                </VBox>
+
+                                                <!-- Active Devices per Month -->
+                                                <VBox styleClass="chart-container">
+                                                    <children>
+                                                        <Label text="Active Devices per month" styleClass="chart-title" />
+                                                        <BarChart fx:id="activeDevicesChart" styleClass="monthly-chart">
+                                                            <xAxis>
+                                                                <CategoryAxis fx:id="activeXAxis" />
+                                                            </xAxis>
+                                                            <yAxis>
+                                                                <NumberAxis fx:id="activeYAxis" />
+                                                            </yAxis>
+                                                        </BarChart>
+                                                    </children>
+                                                    <padding>
+                                                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                                    </padding>
+                                                </VBox>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                    <padding>
+                                        <Insets left="30.0" right="30.0" />
+                                    </padding>
+                                </HBox>
+                            </children>
+                            <padding>
+                                <Insets bottom="30.0" />
+                            </padding>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+            </children>
+        </VBox>
+    </center>
+</BorderPane>

@@ -148,6 +148,15 @@
     -fx-padding: 8 0 8 0;
 }
 
+.status-rejected {
+    -fx-background-color: #ff6b6b;
+    -fx-text-fill: white;
+    -fx-background-radius: 3px;
+    -fx-padding: 2 8 2 8;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
 .request-table .table-row-cell:hover {
     -fx-background-color: #f8f9fa;
 }

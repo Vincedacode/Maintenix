@@ -535,6 +535,8 @@ public class AdminDashboardController implements Initializable {
             case "completed":
             case "done":
                 return "Done";
+            case "rejected":
+                return "Rejected";
             case "in_progress":
             case "processing":
             case "pending":
@@ -579,7 +581,7 @@ public class AdminDashboardController implements Initializable {
         priorityCombo.getItems().addAll("HIGH", "MEDIUM", "LOW");
 
         ComboBox<String> statusCombo = new ComboBox<>();
-        statusCombo.getItems().addAll("pending", "in_progress", "completed");
+        statusCombo.getItems().addAll("pending", "in_progress", "completed", "rejected");
 
         if (isDeviceRequest) {
             DeviceRequest deviceReq = (DeviceRequest) request;
@@ -611,6 +613,8 @@ public class AdminDashboardController implements Initializable {
             String currentAction = mainReq.getAction();
             if ("Done".equals(currentAction)) {
                 statusCombo.setValue("completed");
+            } else if ("Rejected".equals(currentAction)) {
+                statusCombo.setValue("rejected");
             } else if ("Pending".equals(currentAction)) {
                 statusCombo.setValue("in_progress");
             } else {
@@ -1316,10 +1320,13 @@ public class AdminDashboardController implements Initializable {
                     setStyle("");
                 } else {
                     setText(item);
-                    getStyleClass().removeAll("status-done", "status-idle", "status-pending");
+                    getStyleClass().removeAll("status-done", "status-idle", "status-pending", "status-rejected");
                     switch (item.toUpperCase()) {
                         case "DONE":
                             getStyleClass().add("status-done");
+                            break;
+                        case "REJECTED":
+                            getStyleClass().add("status-rejected");
                             break;
                         case "IDLE":
                             getStyleClass().add("status-idle");

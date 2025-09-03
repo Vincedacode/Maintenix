@@ -40,6 +40,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.text.SimpleDateFormat;
+import java.util.stream.Collectors;
 
 public class AdminDashboardController implements Initializable {
 
@@ -71,8 +72,20 @@ public class AdminDashboardController implements Initializable {
     @FXML private Button addUpdateBtn;
     @FXML private Hyperlink showAllLink;
 
+    // Sort MenuButtons - need to be accessible
+    @FXML private MenuButton deviceSortButton;
+    @FXML private MenuButton maintenanceSortButton;
+
     private ObservableList<DeviceRequest> deviceRequests;
     private ObservableList<MaintenanceRequest> maintenanceRequests;
+
+    // Store original unsorted data
+    private List<DeviceRequest> originalDeviceRequests;
+    private List<MaintenanceRequest> originalMaintenanceRequests;
+
+    // Current sort options
+    private String deviceSortOption = "Recently";
+    private String maintenanceSortOption = "Recently";
 
     // DAO objects
     private equipmentrequestdao equipmentDAO;
@@ -91,6 +104,7 @@ public class AdminDashboardController implements Initializable {
         setupMaintenanceRequestTable();
         setupEventHandlers();
         setupTableSelectionHandlers();
+        setupSortMenus(); // Add this new method
     }
 
     private void initializeDAOs() {
@@ -114,9 +128,207 @@ public class AdminDashboardController implements Initializable {
         }
     }
 
+    private void setupSortMenus() {
+        // Setup Device Request Sort Menu
+        if (deviceSortButton != null) {
+            deviceSortButton.setText("Sort by Recently ▼");
+            deviceSortButton.getItems().clear();
+
+            MenuItem recentlyItem1 = new MenuItem("Recently");
+            MenuItem oldestItem1 = new MenuItem("Oldest");
+            MenuItem priorityItem1 = new MenuItem("Priority");
+
+            recentlyItem1.setOnAction(e -> {
+                deviceSortOption = "Recently";
+                deviceSortButton.setText("Sort by Recently ▼");
+                sortDeviceRequests();
+            });
+
+            oldestItem1.setOnAction(e -> {
+                deviceSortOption = "Oldest";
+                deviceSortButton.setText("Sort by Oldest ▼");
+                sortDeviceRequests();
+            });
+
+            priorityItem1.setOnAction(e -> {
+                deviceSortOption = "Priority";
+                deviceSortButton.setText("Sort by Priority ▼");
+                sortDeviceRequests();
+            });
+
+            deviceSortButton.getItems().addAll(recentlyItem1, oldestItem1, priorityItem1);
+        }
+
+        // Setup Maintenance Request Sort Menu
+        if (maintenanceSortButton != null) {
+            maintenanceSortButton.setText("Sort by Recently ▼");
+            maintenanceSortButton.getItems().clear();
+
+            MenuItem recentlyItem2 = new MenuItem("Recently");
+            MenuItem oldestItem2 = new MenuItem("Oldest");
+            MenuItem priorityItem2 = new MenuItem("Priority");
+
+            recentlyItem2.setOnAction(e -> {
+                maintenanceSortOption = "Recently";
+                maintenanceSortButton.setText("Sort by Recently ▼");
+                sortMaintenanceRequests();
+            });
+
+            oldestItem2.setOnAction(e -> {
+                maintenanceSortOption = "Oldest";
+                maintenanceSortButton.setText("Sort by Oldest ▼");
+                sortMaintenanceRequests();
+            });
+
+            priorityItem2.setOnAction(e -> {
+                maintenanceSortOption = "Priority";
+                maintenanceSortButton.setText("Sort by Priority ▼");
+                sortMaintenanceRequests();
+            });
+
+            maintenanceSortButton.getItems().addAll(recentlyItem2, oldestItem2, priorityItem2);
+        }
+    }
+
+    private void sortDeviceRequests() {
+        if (originalDeviceRequests == null || originalDeviceRequests.isEmpty()) {
+            return;
+        }
+
+        List<DeviceRequest> sortedRequests = new ArrayList<>(originalDeviceRequests);
+
+        switch (deviceSortOption) {
+            case "Recently":
+                // Sort by timestamp (most recent first)
+                sortedRequests.sort((a, b) -> {
+                    try {
+                        Date dateA = parseRequestDate(a);
+                        Date dateB = parseRequestDate(b);
+                        return dateB.compareTo(dateA); // Descending order (newest first)
+                    } catch (Exception e) {
+                        return 0;
+                    }
+                });
+                break;
+
+            case "Oldest":
+                // Sort by timestamp (oldest first)
+                sortedRequests.sort((a, b) -> {
+                    try {
+                        Date dateA = parseRequestDate(a);
+                        Date dateB = parseRequestDate(b);
+                        return dateA.compareTo(dateB); // Ascending order (oldest first)
+                    } catch (Exception e) {
+                        return 0;
+                    }
+                });
+                break;
+
+            case "Priority":
+                // Sort by priority: HIGH -> MEDIUM -> LOW -> Done
+                sortedRequests.sort((a, b) -> {
+                    int priorityA = getPriorityValue(a.getPriority());
+                    int priorityB = getPriorityValue(b.getPriority());
+                    return Integer.compare(priorityB, priorityA); // Descending order
+                });
+                break;
+        }
+
+        deviceRequests.setAll(sortedRequests);
+        deviceRequestTable.refresh();
+    }
+
+    private void sortMaintenanceRequests() {
+        if (originalMaintenanceRequests == null || originalMaintenanceRequests.isEmpty()) {
+            return;
+        }
+
+        List<MaintenanceRequest> sortedRequests = new ArrayList<>(originalMaintenanceRequests);
+
+        switch (maintenanceSortOption) {
+            case "Recently":
+                // Sort by timestamp (most recent first)
+                sortedRequests.sort((a, b) -> {
+                    try {
+                        Date dateA = parseMaintenanceRequestDate(a);
+                        Date dateB = parseMaintenanceRequestDate(b);
+                        return dateB.compareTo(dateA); // Descending order (newest first)
+                    } catch (Exception e) {
+                        return 0;
+                    }
+                });
+                break;
+
+            case "Oldest":
+                // Sort by timestamp (oldest first)
+                sortedRequests.sort((a, b) -> {
+                    try {
+                        Date dateA = parseMaintenanceRequestDate(a);
+                        Date dateB = parseMaintenanceRequestDate(b);
+                        return dateA.compareTo(dateB); // Ascending order (oldest first)
+                    } catch (Exception e) {
+                        return 0;
+                    }
+                });
+                break;
+
+            case "Priority":
+                // Sort by priority: HIGH -> MEDIUM -> LOW
+                sortedRequests.sort((a, b) -> {
+                    int priorityA = getPriorityValue(a.getPriority());
+                    int priorityB = getPriorityValue(b.getPriority());
+                    return Integer.compare(priorityB, priorityA); // Descending order
+                });
+                break;
+        }
+
+        maintenanceRequests.setAll(sortedRequests);
+        maintenanceRequestTable.refresh();
+    }
+
+    private Date parseRequestDate(DeviceRequest request) {
+        // You'll need to store the actual Date object in your DeviceRequest class
+        // For now, we'll use the request ID to get the creation time from ObjectId
+        try {
+            ObjectId objectId = new ObjectId(request.getRequestId());
+            return objectId.getDate();
+        } catch (Exception e) {
+            return new Date(); // Default to current date if parsing fails
+        }
+    }
+
+    private Date parseMaintenanceRequestDate(MaintenanceRequest request) {
+        // Similar to above, use ObjectId to get creation time
+        try {
+            ObjectId objectId = new ObjectId(request.getReportId());
+            return objectId.getDate();
+        } catch (Exception e) {
+            return new Date(); // Default to current date if parsing fails
+        }
+    }
+
+    private int getPriorityValue(String priority) {
+        if (priority == null) return 0;
+
+        switch (priority.toUpperCase()) {
+            case "HIGH":
+                return 3;
+            case "MEDIUM":
+                return 2;
+            case "LOW":
+                return 1;
+            case "DONE":
+                return 0;
+            default:
+                return 0;
+        }
+    }
+
     private void loadDataFromDatabase() {
         deviceRequests = FXCollections.observableArrayList();
         maintenanceRequests = FXCollections.observableArrayList();
+        originalDeviceRequests = new ArrayList<>();
+        originalMaintenanceRequests = new ArrayList<>();
 
         try {
             // Load equipment requests
@@ -149,7 +361,7 @@ public class AdminDashboardController implements Initializable {
                         priority.toUpperCase(),
                         requestId.toString()
                 );
-                deviceRequests.add(request);
+                originalDeviceRequests.add(request);
             }
 
             // Load maintenance reports
@@ -182,14 +394,39 @@ public class AdminDashboardController implements Initializable {
                         action,
                         reportId.toString()
                 );
-                maintenanceRequests.add(request);
+                originalMaintenanceRequests.add(request);
             }
+
+            // Apply default sorting (Recently) and populate observable lists
+            deviceSortOption = "Recently";
+            maintenanceSortOption = "Recently";
+            sortDeviceRequests();
+            sortMaintenanceRequests();
 
         } catch (Exception e) {
             System.err.println("Error loading data from database: " + e.getMessage());
             e.printStackTrace();
         }
     }
+
+    // ... [Keep all your existing methods - I'll only show the modified ones]
+
+    private void handleDashboardClick() {
+        System.out.println("Dashboard clicked");
+        updateActiveNavButton(dashboardBtn);
+        // Refresh data when dashboard is clicked
+        loadDataFromDatabase();
+    }
+
+    private void handleAddUpdateClick() {
+        System.out.println("Add Update clicked");
+        // Refresh data from database
+        loadDataFromDatabase();
+        showAlert(Alert.AlertType.INFORMATION, "Data Refreshed",
+                "All tables have been updated with latest data from database");
+    }
+
+    // ... [Keep all your existing helper methods unchanged]
 
     private String getStaffUsernameById(ObjectId staffId) {
         try {
@@ -374,10 +611,8 @@ public class AdminDashboardController implements Initializable {
                 updateMaintenanceRequestInDatabase(mainReq.getReportId(), newPriority, newStatus);
             }
 
-            // Reload data
+            // Reload data and maintain current sort order
             loadDataFromDatabase();
-            deviceRequestTable.refresh();
-            maintenanceRequestTable.refresh();
         }
     }
 
@@ -724,14 +959,6 @@ public class AdminDashboardController implements Initializable {
         return value;
     }
 
-    // Event handlers
-    private void handleDashboardClick() {
-        System.out.println("Dashboard clicked");
-        updateActiveNavButton(dashboardBtn);
-        // Refresh data when dashboard is clicked
-        loadDataFromDatabase();
-    }
-
     private void handleStatisticsClick() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Statistics.fxml"));
@@ -743,7 +970,6 @@ public class AdminDashboardController implements Initializable {
             System.err.println("Error loading history page: " + e.getMessage());
         }
         updateActiveNavButton(statisticsBtn);
-        // Navigate to statistics view - implement navigation logic here
     }
 
     private void handleNotificationsClick() {
@@ -769,7 +995,6 @@ public class AdminDashboardController implements Initializable {
             } catch (IOException e) {
                 System.err.println("Error loading history page: " + e.getMessage());
             }
-            // Navigate to login screen
         }
     }
 
@@ -785,24 +1010,12 @@ public class AdminDashboardController implements Initializable {
 
     private void handleHistoryClick() {
         System.out.println("History clicked");
-        // Implement history view - could show archived requests
         showAlert(Alert.AlertType.INFORMATION, "History",
                 "History view - showing all completed/archived requests");
     }
 
-    private void handleAddUpdateClick() {
-        System.out.println("Add Update clicked");
-        // Refresh data from database
-        loadDataFromDatabase();
-        deviceRequestTable.refresh();
-        maintenanceRequestTable.refresh();
-        showAlert(Alert.AlertType.INFORMATION, "Data Refreshed",
-                "All tables have been updated with latest data from database");
-    }
-
     private void handleShowAllRequestsClick() {
         System.out.println("Show all requests clicked");
-        // Could implement pagination or show expanded view
         showAlert(Alert.AlertType.INFORMATION, "Show All",
                 "Showing all maintenance requests - " + maintenanceRequests.size() + " total");
     }

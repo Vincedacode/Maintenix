@@ -76,7 +76,7 @@
                                     <children>
                                         <Label text="New Device Request" styleClass="section-title" />
                                         <Region HBox.hgrow="ALWAYS" />
-                                        <MenuButton text="Sort by Recently ▼" styleClass="sort-button">
+                                        <MenuButton fx:id="deviceSortButton" text="Sort by Recently ▼" styleClass="sort-button">
                                             <items>
                                                 <MenuItem text="Recently" />
                                                 <MenuItem text="Oldest" />
@@ -132,7 +132,7 @@
                                     <children>
                                         <Label text="Maintenance Requests" styleClass="section-title" />
                                         <Region HBox.hgrow="ALWAYS" />
-                                        <MenuButton text="Sort by Recently ▼" styleClass="sort-button">
+                                        <MenuButton fx:id="maintenanceSortButton" text="Sort by Recently ▼" styleClass="sort-button">
                                             <items>
                                                 <MenuItem text="Recently" />
                                                 <MenuItem text="Oldest" />

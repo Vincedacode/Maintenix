@@ -17,7 +17,7 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/View.fxml"));
         Parent root = loader.load();
 
-        Scene scene = new Scene(root,1200,800);
+        Scene scene = new Scene(root);
 
         // Load CSS
         URL cssURL = getClass().getResource("/Styles/style.css");

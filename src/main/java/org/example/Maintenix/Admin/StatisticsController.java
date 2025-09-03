@@ -3,7 +3,10 @@ package org.example.Maintenix.Admin;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,12 +14,14 @@ import javafx.stage.Stage;
 import org.bson.Document;
 import org.example.Maintenix.DAO.equipmentrequestdao;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.example.Maintenix.Utils.AdminSession;
 
 public class StatisticsController implements Initializable {
 
@@ -85,13 +90,28 @@ public class StatisticsController implements Initializable {
         setupEventHandlers();
     }
 
+    private void handleDashboardClick() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/AdminDashboard.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) dashboardBtn.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Maintenix - Dashboard");
+        } catch (IOException e) {
+            System.err.println("Error loading history page: " + e.getMessage());
+        }
+
+    }
+
+
+
     private void setupEventHandlers() {
         // Period selection handlers
         fromDateBtn.setOnAction(e -> selectFromDate());
         toDateBtn.setOnAction(e -> selectToDate());
 
         // Navigation handlers (you can implement these based on your navigation logic)
-        dashboardBtn.setOnAction(e -> navigateToDashboard());
+        dashboardBtn.setOnAction(e -> handleDashboardClick());
         notificationsBtn.setOnAction(e -> navigateToNotifications());
         logoutBtn.setOnAction(e -> logout());
     }
@@ -330,14 +350,30 @@ public class StatisticsController implements Initializable {
     }
 
     private void logout() {
-        // Implement logout functionality
-        System.out.println("Logout");
+        AdminSession adminSession = new AdminSession();
+        // Clear admin session
+        if (adminSession != null) {
+            adminSession.clearSession();
+            System.out.println("Admin session cleared on logout");
+        }
+
+        // Close database connection
         if (equipmentDAO != null) {
             equipmentDAO.closeConnection();
         }
+
         // Close current window or navigate to login screen
-        Stage stage = (Stage) logoutBtn.getScene().getWindow();
-        stage.close();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/View.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) logoutBtn.getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (IOException e) {
+            System.err.println("Error loading home page: " + e.getMessage());
+        }
+
+        // You can add navigation to login screen here if needed
+        // Example: loadLoginScreen();
     }
 
     // Cleanup method

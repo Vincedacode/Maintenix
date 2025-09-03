@@ -13,7 +13,7 @@ public class AdminSession {
     private String currentAdminId;
 
     // Private constructor for singleton
-    private AdminSession() {}
+    public AdminSession() {}
 
     // Get singleton instance
     public static AdminSession getInstance() {

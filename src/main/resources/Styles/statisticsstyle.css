@@ -1,56 +1,55 @@
 /* Root and general styles */
 .root {
     -fx-font-family: "Segoe UI", Arial, sans-serif;
-    -fx-background-color: #f5f5f5;
+    -fx-background-color: #f5f7fa;
 }
 
-/* Sidebar Styles */
+/* Sidebar Styles - Consistent with AdminDashboard */
 .sidebar {
-    -fx-background-color: #e8e8e8;
-    -fx-border-color: #d0d0d0;
-    -fx-border-width: 0 1 0 0;
+    -fx-background-color: #e8ecf0;
+    -fx-min-width: 200px;
+    -fx-max-width: 200px;
+    -fx-border-color: #d1d9e0;
+    -fx-border-width: 0 1px 0 0;
 }
 
 .logo-section {
-    -fx-background-color: transparent;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d1d9e0;
+    -fx-border-width: 0 0 1px 0;
 }
 
-.logo-icon {
-    -fx-font-size: 24px;
-    -fx-text-fill: #2196F3;
-    -fx-font-weight: bold;
-}
-
-.brand-text {
+.logo-text {
     -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-text-fill: #2196F3;
+    -fx-text-fill: #1976d2;
 }
 
 .nav-menu {
-    -fx-spacing: 2;
+    -fx-spacing: 5px;
+    -fx-padding: 20 0 0 0;
 }
 
-.nav-item {
+.nav-button {
     -fx-background-color: transparent;
     -fx-text-fill: #666666;
     -fx-font-size: 14px;
     -fx-padding: 12 20 12 20;
-    -fx-background-radius: 0;
-    -fx-border-radius: 0;
+    -fx-border-width: 0;
+    -fx-cursor: hand;
     -fx-alignment: CENTER_LEFT;
 }
 
-.nav-item:hover {
-    -fx-background-color: #d0d0d0;
+.nav-button:hover {
+    -fx-background-color: #f0f4f8;
 }
 
 .nav-active {
-    -fx-background-color: #1976D2 !important;
-    -fx-text-fill: white !important;
+    -fx-background-color: #1976d2;
+    -fx-text-fill: white;
 }
 
-.logout-btn {
+.logout-button {
     -fx-text-fill: #888888;
 }
 
@@ -59,38 +58,44 @@
     -fx-background-color: #f5f7fa;
 }
 
-/* Header Styles */
+/* Header Styles - Consistent with AdminDashboard */
 .header {
-    -fx-background-color: #1976D2;
+    -fx-background-color: #1976d2;
+    -fx-min-height: 80px;
 }
 
 .welcome-text {
-    -fx-font-size: 24px;
-    -fx-font-weight: bold;
     -fx-text-fill: white;
+    -fx-font-size: 24px;
+    -fx-font-weight: normal;
 }
 
 .user-name {
-    -fx-font-size: 14px;
     -fx-text-fill: white;
+    -fx-font-size: 14px;
     -fx-font-weight: bold;
 }
 
 .user-role {
+    -fx-text-fill: #bbdefb;
     -fx-font-size: 12px;
-    -fx-text-fill: #E3F2FD;
+    -fx-padding: 0 0 0 5;
 }
 
-.user-avatar {
-    -fx-background-color: white;
-    -fx-text-fill: #1976D2;
-    -fx-background-radius: 20;
-    -fx-min-width: 40;
-    -fx-min-height: 40;
-    -fx-max-width: 40;
-    -fx-max-height: 40;
+.user-avatar-text {
+    -fx-background-color: #90caf9;
+    -fx-text-fill: #1976d2;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-max-width: 40px;
+    -fx-max-height: 40px;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-border-color: white;
+    -fx-border-width: 2px;
     -fx-alignment: CENTER;
     -fx-font-weight: bold;
+    -fx-font-size: 16px;
 }
 
 /* Content Scroll */
@@ -115,15 +120,20 @@
 }
 
 .period-btn {
-    -fx-background-color: #1976D2;
+    -fx-background-color: #1976d2;
     -fx-text-fill: white;
     -fx-background-radius: 4;
     -fx-padding: 6 12 6 12;
     -fx-font-size: 12px;
+    -fx-cursor: hand;
+}
+
+.period-btn:hover {
+    -fx-background-color: #1565c0;
 }
 
 .period-active {
-    -fx-background-color: #1565C0;
+    -fx-background-color: #1976d2;
 }
 
 /* Statistics Cards */
@@ -138,11 +148,11 @@
 }
 
 .primary-card {
-    -fx-background-color: #1976D2;
+    -fx-background-color: #1976d2;
 }
 
 .secondary-card {
-    -fx-background-color: #1976D2;
+    -fx-background-color: #1976d2;
 }
 
 .stat-label {
@@ -174,83 +184,6 @@
     -fx-font-size: 14px;
     -fx-font-weight: bold;
     -fx-text-fill: #333333;
-}
-
-/* Pie Chart Styling */
-.chart-pie-label {
-    -fx-font-size: 11px;
-}
-
-.chart-pie-label-line {
-    -fx-stroke: #333333;
-}
-
-/* Bar Chart Styling */
-.chart-bar {
-    -fx-bar-fill: #1976D2;
-}
-
-.chart-plot-background {
-    -fx-background-color: white;
-}
-
-.chart {
-    -fx-background-color: white;
-    -fx-padding: 10;
-}
-
-.chart-legend {
-    -fx-background-color: white;
-}
-
-.chart-title {
-    -fx-font-size: 14px;
-    -fx-text-fill: #333333;
-}
-
-.axis {
-    -fx-tick-label-font-size: 10px;
-    -fx-tick-label-fill: #666666;
-}
-
-.axis-label {
-    -fx-font-size: 11px;
-    -fx-text-fill: #666666;
-}
-
-/* Custom pie chart data colors */
-.data0.chart-pie {
-    -fx-pie-color: #333333;  /* Black for Medium */
-}
-
-.data1.chart-pie {
-    -fx-pie-color: #1976D2;  /* Blue for High */
-}
-
-.data2.chart-pie {
-    -fx-pie-color: #42A5F5;  /* Light Blue for Low */
-}
-
-/* Custom legend styling */
-.chart-legend-item-symbol {
-    -fx-background-radius: 6px;
-}
-
-.chart-legend-item {
-    -fx-font-size: 11px;
-}
-
-/* Make sure bar charts have consistent styling */
-.default-color0.chart-bar {
-    -fx-bar-fill: #1976D2;
-}
-
-.default-color1.chart-bar {
-    -fx-bar-fill: #42A5F5;
-}
-
-.default-color2.chart-bar {
-    -fx-bar-fill: #90CAF9;
 }
 
 /* Custom Legend Styles */
@@ -285,4 +218,76 @@
     -fx-font-size: 11px;
     -fx-text-fill: #666666;
     -fx-font-weight: normal;
+}
+
+/* Pie Chart Styling */
+.chart-pie-label {
+    -fx-font-size: 11px;
+}
+
+.chart-pie-label-line {
+    -fx-stroke: #333333;
+}
+
+/* Bar Chart Styling */
+.chart-bar {
+    -fx-bar-fill: #1976d2;
+}
+
+.chart-plot-background {
+    -fx-background-color: white;
+}
+
+.chart {
+    -fx-background-color: white;
+    -fx-padding: 10;
+}
+
+.chart-legend {
+    -fx-background-color: white;
+}
+
+.axis {
+    -fx-tick-label-font-size: 10px;
+    -fx-tick-label-fill: #666666;
+}
+
+.axis-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #666666;
+}
+
+/* Custom pie chart data colors */
+.data0.chart-pie {
+    -fx-pie-color: #333333;  /* Black for Medium */
+}
+
+.data1.chart-pie {
+    -fx-pie-color: #1976D2;  /* Blue for High */
+}
+
+.data2.chart-pie {
+    -fx-pie-color: #42A5F5;  /* Light Blue for Low */
+}
+
+/* Custom legend styling for default JavaFX legend (if used) */
+.chart-legend-item-symbol {
+    -fx-background-radius: 6px;
+}
+
+.chart-legend-item {
+    -fx-font-size: 11px;
+}
+
+/* Make sure bar charts have consistent styling */
+.default-color0.chart-bar {
+    -fx-bar-fill: #1976d2;
+}
+
+.default-color1.chart-bar {
+    -fx-bar-fill: #42A5F5;
+}
+
+.default-color2.chart-bar {
+    -fx-bar-fill: #90CAF9;
 }

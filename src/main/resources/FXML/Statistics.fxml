@@ -5,6 +5,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 
 <BorderPane stylesheets="@/Styles/statisticsstyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Maintenix.Admin.StatisticsController">
     <left>
@@ -13,8 +15,11 @@
                 <!-- Logo Section -->
                 <HBox styleClass="logo-section" alignment="CENTER_LEFT">
                     <children>
-                        <Label styleClass="logo-icon" text="⚙" />
-                        <Label styleClass="brand-text" text="Maintenix" />
+                        <ImageView fitWidth="100" fitHeight="150" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/logo.png" />
+                            </image>
+                        </ImageView>
                     </children>
                     <padding>
                         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -24,9 +29,9 @@
                 <!-- Navigation Menu -->
                 <VBox styleClass="nav-menu">
                     <children>
-                        <Button fx:id="dashboardBtn" text="📊 Dashboard" styleClass="nav-item" maxWidth="Infinity" />
-                        <Button fx:id="statisticsBtn" text="📈 Statistics" styleClass="nav-item, nav-active" maxWidth="Infinity" />
-                        <Button fx:id="notificationsBtn" text="🔔 Notifications" styleClass="nav-item" maxWidth="Infinity" />
+                        <Button fx:id="dashboardBtn" text="📊 Dashboard" styleClass="nav-button" maxWidth="Infinity" />
+                        <Button fx:id="statisticsBtn" text="📈 Statistics" styleClass="nav-button, nav-active" maxWidth="Infinity" />
+                        <Button fx:id="notificationsBtn" text="🔔 Notifications" styleClass="nav-button" maxWidth="Infinity" />
                     </children>
                     <padding>
                         <Insets left="10.0" right="10.0" />
@@ -36,7 +41,7 @@
                 <Region VBox.vgrow="ALWAYS" />
 
                 <!-- Logout Button -->
-                <Button fx:id="logoutBtn" text="🚪 Log Out" styleClass="nav-item, logout-btn" maxWidth="Infinity">
+                <Button fx:id="logoutBtn" text="🚪 Log Out" styleClass="nav-button, logout-button" maxWidth="Infinity">
                     <VBox.margin>
                         <Insets bottom="20.0" left="10.0" right="10.0" />
                     </VBox.margin>
@@ -49,15 +54,15 @@
         <VBox styleClass="main-content">
             <children>
                 <!-- Header -->
-                <HBox alignment="CENTER_LEFT" styleClass="header">
+                <HBox styleClass="header" alignment="CENTER_LEFT">
                     <children>
-                        <Label styleClass="welcome-text" text="Welcome back, Toluwani," />
+                        <Label fx:id="welcomeText" text="Welcome back, Admin" styleClass="welcome-text" />
                         <Region HBox.hgrow="ALWAYS" />
                         <HBox alignment="CENTER_RIGHT" spacing="10.0">
                             <children>
-                                <Label styleClass="user-name" text="Toluwani" />
-                                <Label styleClass="user-role" text="Admin" />
-                                <Label styleClass="user-avatar" text="T" />
+                                <Label fx:id="userNameLabel" text="Admin" styleClass="user-name" />
+                                <Label fx:id="userRoleLabel" text="" styleClass="user-role" />
+                                <Label fx:id="userAvatarLabel" text="" styleClass="user-avatar-text" />
                             </children>
                         </HBox>
                     </children>
@@ -72,7 +77,6 @@
                         <VBox spacing="20.0">
                             <children>
                                 <!-- Period Selection -->
-                                <!-- Period Selection -->
                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
                                     <children>
                                         <Label styleClass="period-label" text="Select period:" />
@@ -81,7 +85,6 @@
                                     </children>
                                 </HBox>
 
-                                <!-- Statistics Cards Row -->
                                 <!-- Statistics Cards Row -->
                                 <HBox spacing="20.0">
                                     <children>
@@ -117,7 +120,6 @@
                                 <!-- Charts Row -->
                                 <HBox spacing="20.0">
                                     <children>
-                                        <!-- Priority Breakdown Chart -->
                                         <!-- Priority Breakdown Chart -->
                                         <VBox styleClass="chart-container">
                                             <children>

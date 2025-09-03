@@ -760,7 +760,15 @@ public class AdminDashboardController implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             // Implement logout logic here
-            System.out.println("User logged out");
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/View.fxml"));
+                Parent root = loader.load();
+                Stage stage = (Stage) logoutBtn.getScene().getWindow();
+                stage.setScene(new Scene(root));
+                stage.setTitle("Maintenix");
+            } catch (IOException e) {
+                System.err.println("Error loading history page: " + e.getMessage());
+            }
             // Navigate to login screen
         }
     }

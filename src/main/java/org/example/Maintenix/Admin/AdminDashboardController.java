@@ -201,12 +201,11 @@ public class AdminDashboardController implements Initializable {
 
         switch (deviceSortOption) {
             case "Recently":
-                // Sort by timestamp (most recent first)
                 sortedRequests.sort((a, b) -> {
                     try {
                         Date dateA = parseRequestDate(a);
                         Date dateB = parseRequestDate(b);
-                        return dateB.compareTo(dateA); // Descending order (newest first)
+                        return dateB.compareTo(dateA);
                     } catch (Exception e) {
                         return 0;
                     }
@@ -214,12 +213,11 @@ public class AdminDashboardController implements Initializable {
                 break;
 
             case "Oldest":
-                // Sort by timestamp (oldest first)
                 sortedRequests.sort((a, b) -> {
                     try {
                         Date dateA = parseRequestDate(a);
                         Date dateB = parseRequestDate(b);
-                        return dateA.compareTo(dateB); // Ascending order (oldest first)
+                        return dateA.compareTo(dateB);
                     } catch (Exception e) {
                         return 0;
                     }
@@ -227,16 +225,20 @@ public class AdminDashboardController implements Initializable {
                 break;
 
             case "Priority":
-                // Sort by priority: HIGH -> MEDIUM -> LOW -> Done
                 sortedRequests.sort((a, b) -> {
                     int priorityA = getPriorityValue(a.getPriority());
                     int priorityB = getPriorityValue(b.getPriority());
-                    return Integer.compare(priorityB, priorityA); // Descending order
+                    return Integer.compare(priorityB, priorityA);
                 });
                 break;
         }
 
-        deviceRequests.setAll(sortedRequests);
+        // Limit to 10 items
+        List<DeviceRequest> limitedRequests = sortedRequests.stream()
+                .limit(10)
+                .collect(Collectors.toList());
+
+        deviceRequests.setAll(limitedRequests);
         deviceRequestTable.refresh();
     }
 
@@ -249,12 +251,11 @@ public class AdminDashboardController implements Initializable {
 
         switch (maintenanceSortOption) {
             case "Recently":
-                // Sort by timestamp (most recent first)
                 sortedRequests.sort((a, b) -> {
                     try {
                         Date dateA = parseMaintenanceRequestDate(a);
                         Date dateB = parseMaintenanceRequestDate(b);
-                        return dateB.compareTo(dateA); // Descending order (newest first)
+                        return dateB.compareTo(dateA);
                     } catch (Exception e) {
                         return 0;
                     }
@@ -262,12 +263,11 @@ public class AdminDashboardController implements Initializable {
                 break;
 
             case "Oldest":
-                // Sort by timestamp (oldest first)
                 sortedRequests.sort((a, b) -> {
                     try {
                         Date dateA = parseMaintenanceRequestDate(a);
                         Date dateB = parseMaintenanceRequestDate(b);
-                        return dateA.compareTo(dateB); // Ascending order (oldest first)
+                        return dateA.compareTo(dateB);
                     } catch (Exception e) {
                         return 0;
                     }
@@ -275,18 +275,24 @@ public class AdminDashboardController implements Initializable {
                 break;
 
             case "Priority":
-                // Sort by priority: HIGH -> MEDIUM -> LOW
                 sortedRequests.sort((a, b) -> {
                     int priorityA = getPriorityValue(a.getPriority());
                     int priorityB = getPriorityValue(b.getPriority());
-                    return Integer.compare(priorityB, priorityA); // Descending order
+                    return Integer.compare(priorityB, priorityA);
                 });
                 break;
         }
 
-        maintenanceRequests.setAll(sortedRequests);
+        // Limit to 10 items
+        List<MaintenanceRequest> limitedRequests = sortedRequests.stream()
+                .limit(10)
+                .collect(Collectors.toList());
+
+        maintenanceRequests.setAll(limitedRequests);
         maintenanceRequestTable.refresh();
     }
+
+
 
     private Date parseRequestDate(DeviceRequest request) {
         // You'll need to store the actual Date object in your DeviceRequest class
@@ -1039,15 +1045,12 @@ public class AdminDashboardController implements Initializable {
     }
 
     private void handleHistoryClick() {
-        System.out.println("History clicked");
-        showAlert(Alert.AlertType.INFORMATION, "History",
-                "History view - showing all completed/archived requests");
+        System.out.println("History clicked - Opening all device requests window");
+        openAllDeviceRequestsWindow();
     }
-
     private void handleShowAllRequestsClick() {
-        System.out.println("Show all requests clicked");
-        showAlert(Alert.AlertType.INFORMATION, "Show All",
-                "Showing all maintenance requests - " + maintenanceRequests.size() + " total");
+        System.out.println("Show all requests clicked - Opening all maintenance requests window");
+        openAllMaintenanceRequestsWindow();
     }
 
     private void updateActiveNavButton(Button activeButton) {
@@ -1058,6 +1061,277 @@ public class AdminDashboardController implements Initializable {
 
         // Add active class to clicked button
         activeButton.getStyleClass().add("nav-active");
+    }
+
+    private void openAllDeviceRequestsWindow() {
+        try {
+            Stage historyStage = new Stage();
+            historyStage.setTitle("All Device Requests");
+
+            VBox root = new VBox(10);
+            root.setPadding(new Insets(20));
+
+            // Create table for all device requests
+            TableView<DeviceRequest> allDeviceTable = new TableView<>();
+
+            TableColumn<DeviceRequest, String> allDeviceCol = new TableColumn<>("Device");
+            TableColumn<DeviceRequest, String> allDateCol = new TableColumn<>("Date/Time");
+            TableColumn<DeviceRequest, String> allPriorityCol = new TableColumn<>("Priority");
+
+            allDeviceCol.setCellValueFactory(new PropertyValueFactory<>("device"));
+            allDateCol.setCellValueFactory(new PropertyValueFactory<>("dateTime"));
+            allPriorityCol.setCellValueFactory(new PropertyValueFactory<>("priority"));
+
+            // Set column widths
+            allDeviceCol.setPrefWidth(250);
+            allDateCol.setPrefWidth(150);
+            allPriorityCol.setPrefWidth(100);
+
+            // Apply same cell factories as main table
+            setupDeviceColumnCellFactories(allDeviceCol, allDateCol, allPriorityCol);
+
+            allDeviceTable.getColumns().addAll(allDeviceCol, allDateCol, allPriorityCol);
+
+            // Load all device requests (no limit)
+            ObservableList<DeviceRequest> allDeviceRequests = FXCollections.observableArrayList();
+            allDeviceRequests.addAll(originalDeviceRequests);
+            allDeviceTable.setItems(allDeviceRequests);
+
+            Label titleLabel = new Label("All Device Requests (" + originalDeviceRequests.size() + " total)");
+            titleLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+            root.getChildren().addAll(titleLabel, allDeviceTable);
+
+            Scene scene = new Scene(root, 600, 500);
+            historyStage.setScene(scene);
+            historyStage.initOwner(deviceRequestTable.getScene().getWindow());
+            historyStage.show();
+
+        } catch (Exception e) {
+            System.err.println("Error opening all device requests window: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to open device requests history");
+        }
+    }
+
+    private void openAllMaintenanceRequestsWindow() {
+        try {
+            Stage allRequestsStage = new Stage();
+            allRequestsStage.setTitle("All Maintenance Requests");
+
+            VBox root = new VBox(10);
+            root.setPadding(new Insets(20));
+
+            // Create table for all maintenance requests
+            TableView<MaintenanceRequest> allMaintenanceTable = new TableView<>();
+
+            TableColumn<MaintenanceRequest, String> allMainDeviceCol = new TableColumn<>("Issue");
+            TableColumn<MaintenanceRequest, String> allMainDateCol = new TableColumn<>("Date/Time");
+            TableColumn<MaintenanceRequest, String> allMainPriorityCol = new TableColumn<>("Priority");
+            TableColumn<MaintenanceRequest, String> allActionCol = new TableColumn<>("Status");
+
+            allMainDeviceCol.setCellValueFactory(new PropertyValueFactory<>("device"));
+            allMainDateCol.setCellValueFactory(new PropertyValueFactory<>("dateTime"));
+            allMainPriorityCol.setCellValueFactory(new PropertyValueFactory<>("priority"));
+            allActionCol.setCellValueFactory(new PropertyValueFactory<>("action"));
+
+            // Set column widths
+            allMainDeviceCol.setPrefWidth(250);
+            allMainDateCol.setPrefWidth(150);
+            allMainPriorityCol.setPrefWidth(100);
+            allActionCol.setPrefWidth(100);
+
+            // Apply same cell factories as main table
+            setupMaintenanceColumnCellFactories(allMainDeviceCol, allMainDateCol, allMainPriorityCol, allActionCol);
+
+            allMaintenanceTable.getColumns().addAll(allMainDeviceCol, allMainDateCol, allMainPriorityCol, allActionCol);
+
+            // Load all maintenance requests (no limit)
+            ObservableList<MaintenanceRequest> allMaintenanceRequests = FXCollections.observableArrayList();
+            allMaintenanceRequests.addAll(originalMaintenanceRequests);
+            allMaintenanceTable.setItems(allMaintenanceRequests);
+
+            Label titleLabel = new Label("All Maintenance Requests (" + originalMaintenanceRequests.size() + " total)");
+            titleLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+            root.getChildren().addAll(titleLabel, allMaintenanceTable);
+
+            Scene scene = new Scene(root, 700, 500);
+            allRequestsStage.setScene(scene);
+            allRequestsStage.initOwner(maintenanceRequestTable.getScene().getWindow());
+            allRequestsStage.show();
+
+        } catch (Exception e) {
+            System.err.println("Error opening all maintenance requests window: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to open maintenance requests window");
+        }
+    }
+
+    // Helper methods to setup cell factories for the new tables
+    private void setupDeviceColumnCellFactories(TableColumn<DeviceRequest, String> deviceCol,
+                                                TableColumn<DeviceRequest, String> dateCol,
+                                                TableColumn<DeviceRequest, String> priorityCol) {
+        // Same cell factory as main table for device column
+        deviceCol.setCellFactory(param -> new TableCell<DeviceRequest, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || getTableRow().getItem() == null) {
+                    setGraphic(null);
+                } else {
+                    DeviceRequest request = (DeviceRequest) getTableRow().getItem();
+                    VBox vbox = new VBox(2);
+                    Label deviceLabel = new Label(request.getDevice());
+                    deviceLabel.getStyleClass().add("device-name");
+                    Label requesterLabel = new Label(request.getRequester());
+                    requesterLabel.getStyleClass().add("requester-name");
+                    vbox.getChildren().addAll(deviceLabel, requesterLabel);
+                    setGraphic(vbox);
+                }
+            }
+        });
+
+        // Same cell factory as main table for date column
+        dateCol.setCellFactory(param -> new TableCell<DeviceRequest, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || getTableRow().getItem() == null) {
+                    setGraphic(null);
+                } else {
+                    DeviceRequest request = (DeviceRequest) getTableRow().getItem();
+                    VBox vbox = new VBox(2);
+                    Label dateLabel = new Label(request.getDate());
+                    dateLabel.getStyleClass().add("date-text");
+                    Label timeLabel = new Label(request.getTime());
+                    timeLabel.getStyleClass().add("time-text");
+                    vbox.getChildren().addAll(dateLabel, timeLabel);
+                    setGraphic(vbox);
+                }
+            }
+        });
+
+        // Same cell factory as main table for priority column
+        priorityCol.setCellFactory(param -> new TableCell<DeviceRequest, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item);
+                    getStyleClass().removeAll("priority-high", "priority-medium", "priority-low", "status-done");
+                    switch (item.toUpperCase()) {
+                        case "HIGH":
+                            getStyleClass().add("priority-high");
+                            break;
+                        case "MEDIUM":
+                            getStyleClass().add("priority-medium");
+                            break;
+                        case "LOW":
+                            getStyleClass().add("priority-low");
+                            break;
+                        case "DONE":
+                            getStyleClass().add("status-done");
+                            break;
+                    }
+                }
+            }
+        });
+    }
+
+    private void setupMaintenanceColumnCellFactories(TableColumn<MaintenanceRequest, String> deviceCol,
+                                                     TableColumn<MaintenanceRequest, String> dateCol,
+                                                     TableColumn<MaintenanceRequest, String> priorityCol,
+                                                     TableColumn<MaintenanceRequest, String> actionCol) {
+        // Same cell factories as main table
+        deviceCol.setCellFactory(param -> new TableCell<MaintenanceRequest, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || getTableRow().getItem() == null) {
+                    setGraphic(null);
+                } else {
+                    MaintenanceRequest request = (MaintenanceRequest) getTableRow().getItem();
+                    VBox vbox = new VBox(2);
+                    Label deviceLabel = new Label(request.getDevice());
+                    deviceLabel.getStyleClass().add("device-name");
+                    Label requesterLabel = new Label(request.getRequester());
+                    requesterLabel.getStyleClass().add("requester-name");
+                    vbox.getChildren().addAll(deviceLabel, requesterLabel);
+                    setGraphic(vbox);
+                }
+            }
+        });
+
+        dateCol.setCellFactory(param -> new TableCell<MaintenanceRequest, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || getTableRow().getItem() == null) {
+                    setGraphic(null);
+                } else {
+                    MaintenanceRequest request = (MaintenanceRequest) getTableRow().getItem();
+                    VBox vbox = new VBox(2);
+                    Label dateLabel = new Label(request.getDate());
+                    dateLabel.getStyleClass().add("date-text");
+                    Label timeLabel = new Label(request.getTime());
+                    timeLabel.getStyleClass().add("time-text");
+                    vbox.getChildren().addAll(dateLabel, timeLabel);
+                    setGraphic(vbox);
+                }
+            }
+        });
+
+        priorityCol.setCellFactory(param -> new TableCell<MaintenanceRequest, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item);
+                    getStyleClass().removeAll("priority-high", "priority-medium", "priority-low");
+                    switch (item.toUpperCase()) {
+                        case "HIGH":
+                            getStyleClass().add("priority-high");
+                            break;
+                        case "MEDIUM":
+                            getStyleClass().add("priority-medium");
+                            break;
+                        case "LOW":
+                            getStyleClass().add("priority-low");
+                            break;
+                    }
+                }
+            }
+        });
+
+        actionCol.setCellFactory(param -> new TableCell<MaintenanceRequest, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item);
+                    getStyleClass().removeAll("status-done", "status-idle", "status-pending");
+                    switch (item.toUpperCase()) {
+                        case "DONE":
+                            getStyleClass().add("status-done");
+                            break;
+                        case "IDLE":
+                            getStyleClass().add("status-idle");
+                            break;
+                        case "PENDING":
+                            getStyleClass().add("status-pending");
+                            break;
+                    }
+                }
+            }
+        });
     }
 
     private void showAlert(Alert.AlertType type, String title, String content) {

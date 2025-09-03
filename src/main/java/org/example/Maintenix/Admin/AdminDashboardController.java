@@ -98,13 +98,15 @@ public class AdminDashboardController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        deviceRequests = FXCollections.observableArrayList();
+        maintenanceRequests = FXCollections.observableArrayList();
         initializeDAOs();
-        loadDataFromDatabase();
         setupDeviceRequestTable();
         setupMaintenanceRequestTable();
+        loadDataFromDatabase(); // Load data after table setup
         setupEventHandlers();
         setupTableSelectionHandlers();
-        setupSortMenus(); // Add this new method
+        setupSortMenus();
     }
 
     private void initializeDAOs() {
@@ -325,8 +327,20 @@ public class AdminDashboardController implements Initializable {
     }
 
     private void loadDataFromDatabase() {
-        deviceRequests = FXCollections.observableArrayList();
-        maintenanceRequests = FXCollections.observableArrayList();
+        // Don't create new ObservableList instances, just clear existing ones
+        if (deviceRequests == null) {
+            deviceRequests = FXCollections.observableArrayList();
+        } else {
+            deviceRequests.clear();
+        }
+
+        if (maintenanceRequests == null) {
+            maintenanceRequests = FXCollections.observableArrayList();
+        } else {
+            maintenanceRequests.clear();
+        }
+
+        // Clear and recreate original lists
         originalDeviceRequests = new ArrayList<>();
         originalMaintenanceRequests = new ArrayList<>();
 
@@ -397,11 +411,13 @@ public class AdminDashboardController implements Initializable {
                 originalMaintenanceRequests.add(request);
             }
 
-            // Apply default sorting (Recently) and populate observable lists
-            deviceSortOption = "Recently";
-            maintenanceSortOption = "Recently";
+            // Apply current sorting and populate observable lists
             sortDeviceRequests();
             sortMaintenanceRequests();
+
+            // Ensure tables are using the correct data
+            deviceRequestTable.setItems(deviceRequests);
+            maintenanceRequestTable.setItems(maintenanceRequests);
 
         } catch (Exception e) {
             System.err.println("Error loading data from database: " + e.getMessage());
@@ -419,9 +435,19 @@ public class AdminDashboardController implements Initializable {
     }
 
     private void handleAddUpdateClick() {
-        System.out.println("Add Update clicked");
-        // Refresh data from database
+        System.out.println("Add Update clicked - Refreshing data from database");
+
+        // Clear current data
+        deviceRequests.clear();
+        maintenanceRequests.clear();
+
+        // Reload fresh data from database
         loadDataFromDatabase();
+
+        // Refresh the table views
+        deviceRequestTable.refresh();
+        maintenanceRequestTable.refresh();
+
         showAlert(Alert.AlertType.INFORMATION, "Data Refreshed",
                 "All tables have been updated with latest data from database");
     }
@@ -626,6 +652,8 @@ public class AdminDashboardController implements Initializable {
                             Updates.set("status", status)
                     )
             );
+            loadDataFromDatabase();
+            deviceRequestTable.refresh();
             showAlert(Alert.AlertType.INFORMATION, "Success", "Device request updated successfully");
         } catch (Exception e) {
             System.err.println("Error updating device request: " + e.getMessage());
@@ -643,6 +671,8 @@ public class AdminDashboardController implements Initializable {
                             Updates.set("status", status)
                     )
             );
+            loadDataFromDatabase();
+            maintenanceRequestTable.refresh();
             showAlert(Alert.AlertType.INFORMATION, "Success", "Maintenance request updated successfully");
         } catch (Exception e) {
             System.err.println("Error updating maintenance request: " + e.getMessage());

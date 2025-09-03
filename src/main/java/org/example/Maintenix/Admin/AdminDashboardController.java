@@ -529,7 +529,7 @@ public class AdminDashboardController implements Initializable {
     }
 
     private String mapStatusToAction(String status) {
-        if (status == null) return "IDLE";
+        if (status == null) return "Pending";
 
         switch (status.toLowerCase()) {
             case "completed":
@@ -537,11 +537,10 @@ public class AdminDashboardController implements Initializable {
                 return "Done";
             case "in_progress":
             case "processing":
-                return "Pending";
             case "pending":
             case "idle":
             default:
-                return "IDLE";
+                return "Pending";
         }
     }
 

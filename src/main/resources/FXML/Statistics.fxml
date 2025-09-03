@@ -72,14 +72,16 @@
                         <VBox spacing="20.0">
                             <children>
                                 <!-- Period Selection -->
+                                <!-- Period Selection -->
                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
                                     <children>
                                         <Label styleClass="period-label" text="Select period:" />
-                                        <Button styleClass="period-btn, period-active" text="from Jan 1, 2025" />
-                                        <Button styleClass="period-btn, period-active" text="to Dec 31, 2025" />
+                                        <Button fx:id="fromDateBtn" styleClass="period-btn, period-active" text="from Jan 1, 2025" />
+                                        <Button fx:id="toDateBtn" styleClass="period-btn, period-active" text="to Dec 31, 2025" />
                                     </children>
                                 </HBox>
 
+                                <!-- Statistics Cards Row -->
                                 <!-- Statistics Cards Row -->
                                 <HBox spacing="20.0">
                                     <children>
@@ -87,7 +89,7 @@
                                         <VBox styleClass="stat-card, primary-card">
                                             <children>
                                                 <Label styleClass="stat-label" text="Total Devices" />
-                                                <Label styleClass="stat-value, primary-value" text="80" />
+                                                <Label fx:id="totalDevicesValue" styleClass="stat-value, primary-value" text="0" />
                                             </children>
                                             <Region HBox.hgrow="ALWAYS" />
                                         </VBox>
@@ -96,7 +98,7 @@
                                         <VBox styleClass="stat-card, secondary-card">
                                             <children>
                                                 <Label styleClass="stat-label" text="Inactive Devices (%)" />
-                                                <Label styleClass="stat-value" text="36.2%" />
+                                                <Label fx:id="inactivePercentageValue" styleClass="stat-value" text="0%" />
                                             </children>
                                             <Region HBox.hgrow="ALWAYS" />
                                         </VBox>
@@ -105,7 +107,7 @@
                                         <VBox styleClass="stat-card, secondary-card">
                                             <children>
                                                 <Label styleClass="stat-label" text="Number of Inactive Devices" />
-                                                <Label styleClass="stat-value" text="36" />
+                                                <Label fx:id="inactiveDevicesValue" styleClass="stat-value" text="0" />
                                             </children>
                                             <Region HBox.hgrow="ALWAYS" />
                                         </VBox>
@@ -116,10 +118,43 @@
                                 <HBox spacing="20.0">
                                     <children>
                                         <!-- Priority Breakdown Chart -->
+                                        <!-- Priority Breakdown Chart -->
                                         <VBox styleClass="chart-container">
                                             <children>
                                                 <Label styleClass="chart-title" text="Total Breakdown (by Priority)" />
-                                                <PieChart fx:id="priorityChart" prefHeight="300.0" />
+                                                <PieChart fx:id="priorityChart" prefHeight="250.0" />
+
+                                                <!-- Custom Legend -->
+                                                <HBox alignment="CENTER" spacing="20.0">
+                                                    <children>
+                                                        <!-- High Priority Legend -->
+                                                        <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                                            <children>
+                                                                <Region styleClass="legend-dot-high" />
+                                                                <Label styleClass="legend-text" text="High" />
+                                                            </children>
+                                                        </HBox>
+
+                                                        <!-- Medium Priority Legend -->
+                                                        <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                                            <children>
+                                                                <Region styleClass="legend-dot-medium" />
+                                                                <Label styleClass="legend-text" text="Medium" />
+                                                            </children>
+                                                        </HBox>
+
+                                                        <!-- Low Priority Legend -->
+                                                        <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                                            <children>
+                                                                <Region styleClass="legend-dot-low" />
+                                                                <Label styleClass="legend-text" text="Low" />
+                                                            </children>
+                                                        </HBox>
+                                                    </children>
+                                                    <padding>
+                                                        <Insets top="10.0" />
+                                                    </padding>
+                                                </HBox>
                                             </children>
                                             <Region HBox.hgrow="ALWAYS" />
                                         </VBox>

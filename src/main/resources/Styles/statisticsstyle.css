@@ -252,3 +252,37 @@
 .default-color2.chart-bar {
     -fx-bar-fill: #90CAF9;
 }
+
+/* Custom Legend Styles */
+.legend-dot-high {
+    -fx-background-color: #1976D2;
+    -fx-background-radius: 6px;
+    -fx-min-width: 12px;
+    -fx-min-height: 12px;
+    -fx-max-width: 12px;
+    -fx-max-height: 12px;
+}
+
+.legend-dot-medium {
+    -fx-background-color: #333333;
+    -fx-background-radius: 6px;
+    -fx-min-width: 12px;
+    -fx-min-height: 12px;
+    -fx-max-width: 12px;
+    -fx-max-height: 12px;
+}
+
+.legend-dot-low {
+    -fx-background-color: #42A5F5;
+    -fx-background-radius: 6px;
+    -fx-min-width: 12px;
+    -fx-min-height: 12px;
+    -fx-max-width: 12px;
+    -fx-max-height: 12px;
+}
+
+.legend-text {
+    -fx-font-size: 11px;
+    -fx-text-fill: #666666;
+    -fx-font-weight: normal;
+}

@@ -14,6 +14,12 @@ import javafx.stage.Stage;
 import org.bson.Document;
 import org.example.Maintenix.DAO.equipmentrequestdao;
 
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
+
+import javafx.scene.control.DatePicker;
+import javafx.stage.Modality;
+
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -67,8 +73,13 @@ public class StatisticsController implements Initializable {
     @FXML
     private Button dashboardBtn;
 
+
+
     @FXML
-    private Button notificationsBtn;
+    private DatePicker fromDatePicker;
+
+    @FXML
+    private DatePicker toDatePicker;
 
     @FXML
     private Button logoutBtn;
@@ -85,10 +96,56 @@ public class StatisticsController implements Initializable {
         fromDate = LocalDate.of(LocalDate.now().getYear(), 1, 1);
         toDate = LocalDate.of(LocalDate.now().getYear(), 12, 31);
 
+        // Initialize date pickers if they exist in FXML
+        if (fromDatePicker != null) {
+            fromDatePicker.setValue(fromDate);
+            fromDatePicker.setOnAction(e -> handleFromDateChange());
+        }
+
+        if (toDatePicker != null) {
+            toDatePicker.setValue(toDate);
+            toDatePicker.setOnAction(e -> handleToDateChange());
+        }
+
         updateDateButtons();
         loadDataAndUpdateCharts();
         setupEventHandlers();
     }
+
+    private void handleFromDateChange() {
+        if (fromDatePicker != null && fromDatePicker.getValue() != null) {
+            fromDate = fromDatePicker.getValue();
+
+            // Ensure from date is not after to date
+            if (fromDate.isAfter(toDate)) {
+                toDate = fromDate;
+                if (toDatePicker != null) {
+                    toDatePicker.setValue(toDate);
+                }
+            }
+
+            updateDateButtons();
+            loadDataAndUpdateCharts();
+        }
+    }
+
+    private void handleToDateChange() {
+        if (toDatePicker != null && toDatePicker.getValue() != null) {
+            toDate = toDatePicker.getValue();
+
+            // Ensure to date is not before from date
+            if (toDate.isBefore(fromDate)) {
+                fromDate = toDate;
+                if (fromDatePicker != null) {
+                    fromDatePicker.setValue(fromDate);
+                }
+            }
+
+            updateDateButtons();
+            loadDataAndUpdateCharts();
+        }
+    }
+
 
     private void handleDashboardClick() {
         try {
@@ -110,48 +167,107 @@ public class StatisticsController implements Initializable {
         fromDateBtn.setOnAction(e -> selectFromDate());
         toDateBtn.setOnAction(e -> selectToDate());
 
-        // Navigation handlers (you can implement these based on your navigation logic)
+        // Navigation handlers
         dashboardBtn.setOnAction(e -> handleDashboardClick());
-        notificationsBtn.setOnAction(e -> navigateToNotifications());
+        // Remove this line: notificationsBtn.setOnAction(e -> navigateToNotifications());
         logoutBtn.setOnAction(e -> logout());
     }
 
-    private void selectFromDate() {
-        // Simple date selection - you can implement a DatePicker dialog here
-        // For now, let's cycle through some preset options
-        if (fromDate.getYear() == LocalDate.now().getYear()) {
-            fromDate = LocalDate.of(LocalDate.now().getYear() - 1, 1, 1);
-        } else {
-            fromDate = LocalDate.of(LocalDate.now().getYear(), 1, 1);
+    private void showDatePickerDialog(boolean isFromDate) {
+        try {
+            Stage dialogStage = new Stage();
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(fromDateBtn.getScene().getWindow());
+            dialogStage.setTitle(isFromDate ? "Select From Date" : "Select To Date");
+
+            VBox dialogVbox = new VBox(20);
+            dialogVbox.setStyle("-fx-padding: 20; -fx-alignment: center;");
+
+            Label label = new Label(isFromDate ? "Select From Date:" : "Select To Date:");
+            label.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
+
+            DatePicker datePicker = new DatePicker();
+            datePicker.setValue(isFromDate ? fromDate : toDate);
+            datePicker.setStyle("-fx-pref-width: 200;");
+
+            HBox buttonBox = new HBox(10);
+            buttonBox.setStyle("-fx-alignment: center;");
+
+            Button okButton = new Button("OK");
+            okButton.setStyle("-fx-background-color: #1976d2; -fx-text-fill: white; -fx-padding: 8 16;");
+            okButton.setOnAction(e -> {
+                if (datePicker.getValue() != null) {
+                    if (isFromDate) {
+                        fromDate = datePicker.getValue();
+                        // Ensure from date is not after to date
+                        if (fromDate.isAfter(toDate)) {
+                            toDate = fromDate;
+                        }
+                    } else {
+                        toDate = datePicker.getValue();
+                        // Ensure to date is not before from date
+                        if (toDate.isBefore(fromDate)) {
+                            fromDate = toDate;
+                        }
+                    }
+                    updateDateButtons();
+                    loadDataAndUpdateCharts();
+                }
+                dialogStage.close();
+            });
+
+            Button cancelButton = new Button("Cancel");
+            cancelButton.setStyle("-fx-background-color: #666; -fx-text-fill: white; -fx-padding: 8 16;");
+            cancelButton.setOnAction(e -> dialogStage.close());
+
+            buttonBox.getChildren().addAll(okButton, cancelButton);
+            dialogVbox.getChildren().addAll(label, datePicker, buttonBox);
+
+            Scene dialogScene = new Scene(dialogVbox, 300, 200);
+            dialogStage.setScene(dialogScene);
+            dialogStage.setResizable(false);
+            dialogStage.showAndWait();
+
+        } catch (Exception e) {
+            System.err.println("Error showing date picker dialog: " + e.getMessage());
+            e.printStackTrace();
         }
-        updateDateButtons();
-        loadDataAndUpdateCharts();
+    }
+
+    private void selectFromDate() {
+        showDatePickerDialog(true);
     }
 
     private void selectToDate() {
-        // Simple date selection - you can implement a DatePicker dialog here
-        if (toDate.equals(LocalDate.of(LocalDate.now().getYear(), 12, 31))) {
-            toDate = LocalDate.now();
-        } else {
-            toDate = LocalDate.of(LocalDate.now().getYear(), 12, 31);
-        }
-        updateDateButtons();
-        loadDataAndUpdateCharts();
+        showDatePickerDialog(false);
     }
 
     private void updateDateButtons() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d, yyyy");
-        fromDateBtn.setText("from " + fromDate.format(formatter));
-        toDateBtn.setText("to " + toDate.format(formatter));
+        if (fromDateBtn != null) {
+            fromDateBtn.setText("from " + fromDate.format(formatter));
+        }
+        if (toDateBtn != null) {
+            toDateBtn.setText("to " + toDate.format(formatter));
+        }
     }
 
     private void loadDataAndUpdateCharts() {
         try {
+            // Validate date range
+            if (fromDate.isAfter(toDate)) {
+                System.err.println("From date cannot be after to date. Adjusting dates.");
+                toDate = fromDate;
+            }
+
             // Get all equipment requests
             List<Document> allRequests = equipmentDAO.getAllEquipmentRequests();
 
             // Filter requests by date range
             List<Document> filteredRequests = filterRequestsByDateRange(allRequests);
+
+            System.out.println("Date range: " + fromDate + " to " + toDate);
+            System.out.println("Filtered requests: " + filteredRequests.size() + " out of " + allRequests.size());
 
             // Update statistics cards
             updateStatisticsCards(filteredRequests);
@@ -289,16 +405,51 @@ public class StatisticsController implements Initializable {
         updateBarChart(inactiveDevicesChart, inactiveRequests, inactiveXAxis, inactiveYAxis, "Inactive");
     }
 
+    private List<String> generateMonthLabels() {
+        List<String> labels = new ArrayList<>();
+        LocalDate current = fromDate.withDayOfMonth(1); // Start at beginning of month
+        LocalDate endDate = toDate.withDayOfMonth(toDate.lengthOfMonth()); // End at end of month
+
+        while (!current.isAfter(endDate)) {
+            if (fromDate.getYear() != toDate.getYear()) {
+                // Include year if range spans multiple years
+                labels.add(getMonthName(current.getMonthValue() - 1) + " " + current.getYear());
+            } else {
+                labels.add(getMonthName(current.getMonthValue() - 1));
+            }
+            current = current.plusMonths(1);
+        }
+
+        // If no labels generated or range is less than a month, show at least current month
+        if (labels.isEmpty()) {
+            if (fromDate.getYear() != toDate.getYear()) {
+                labels.add(getMonthName(fromDate.getMonthValue() - 1) + " " + fromDate.getYear());
+            } else {
+                labels.add(getMonthName(fromDate.getMonthValue() - 1));
+            }
+        }
+
+        return labels;
+    }
+
     private void updateBarChart(BarChart<String, Number> chart, List<Document> requests,
                                 CategoryAxis xAxis, NumberAxis yAxis, String chartType) {
-        // Group requests by month
+        // Group requests by month within the selected date range
         Map<String, Long> monthlyData = requests.stream()
                 .filter(request -> request.getDate("created_at") != null)
                 .collect(Collectors.groupingBy(
                         request -> {
                             Calendar cal = Calendar.getInstance();
                             cal.setTime(request.getDate("created_at"));
-                            return getMonthName(cal.get(Calendar.MONTH));
+                            int year = cal.get(Calendar.YEAR);
+                            int month = cal.get(Calendar.MONTH);
+
+                            // For ranges spanning multiple years, include year in label
+                            if (fromDate.getYear() != toDate.getYear()) {
+                                return getMonthName(month) + " " + year;
+                            } else {
+                                return getMonthName(month);
+                            }
                         },
                         Collectors.counting()
                 ));
@@ -311,18 +462,18 @@ public class StatisticsController implements Initializable {
 
         // Calculate upper bound based on data
         long maxValue = monthlyData.values().stream().mapToLong(Long::longValue).max().orElse(10);
-        yAxis.setUpperBound(Math.max(maxValue + 5, 20)); // At least 20, or max + 5
-        yAxis.setTickUnit(Math.max(maxValue / 4, 5));
+        yAxis.setUpperBound(Math.max(maxValue + 2, 10)); // At least 10, or max + 2
+        yAxis.setTickUnit(Math.max(maxValue / 5, 1));
 
         // Create data series
         XYChart.Series<String, Number> series = new XYChart.Series<>();
 
-        String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+        // Generate month labels based on date range
+        List<String> monthLabels = generateMonthLabels();
 
-        for (String month : months) {
-            long count = monthlyData.getOrDefault(month, 0L);
-            series.getData().add(new XYChart.Data<>(month, count));
+        for (String monthLabel : monthLabels) {
+            long count = monthlyData.getOrDefault(monthLabel, 0L);
+            series.getData().add(new XYChart.Data<>(monthLabel, count));
         }
 
         chart.getData().clear();

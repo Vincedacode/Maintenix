@@ -219,11 +219,27 @@ public class HistoryController implements Initializable {
             requestsTableBody.getChildren().add(createEmptyRow("No Equipment Requests Found"));
             updateRequestsCount(0);
         } else {
-            for (Document doc : requests) {
+            // Sort requests by creation date (most recent first)
+            List<Document> sortedRequests = requests.stream()
+                    .sorted((doc1, doc2) -> {
+                        Date date1 = doc1.getDate("created_at");
+                        Date date2 = doc2.getDate("created_at");
+
+                        // Handle null dates - put them at the end
+                        if (date1 == null && date2 == null) return 0;
+                        if (date1 == null) return 1;
+                        if (date2 == null) return -1;
+
+                        // Sort in descending order (most recent first)
+                        return date2.compareTo(date1);
+                    })
+                    .collect(Collectors.toList());
+
+            for (Document doc : sortedRequests) {
                 HBox row = createRequestRow(doc);
                 requestsTableBody.getChildren().add(row);
             }
-            updateRequestsCount(requests.size());
+            updateRequestsCount(sortedRequests.size());
         }
     }
 
@@ -237,11 +253,27 @@ public class HistoryController implements Initializable {
             reportsTableBody.getChildren().add(createEmptyRow("No Maintenance Reports Found"));
             updateReportsCount(0);
         } else {
-            for (Document doc : reports) {
+            // Sort reports by creation date (most recent first)
+            List<Document> sortedReports = reports.stream()
+                    .sorted((doc1, doc2) -> {
+                        Date date1 = doc1.getDate("created_at");
+                        Date date2 = doc2.getDate("created_at");
+
+                        // Handle null dates - put them at the end
+                        if (date1 == null && date2 == null) return 0;
+                        if (date1 == null) return 1;
+                        if (date2 == null) return -1;
+
+                        // Sort in descending order (most recent first)
+                        return date2.compareTo(date1);
+                    })
+                    .collect(Collectors.toList());
+
+            for (Document doc : sortedReports) {
                 HBox row = createReportRow(doc);
                 reportsTableBody.getChildren().add(row);
             }
-            updateReportsCount(reports.size());
+            updateReportsCount(sortedReports.size());
         }
     }
 

@@ -291,3 +291,72 @@
 .default-color2.chart-bar {
     -fx-bar-fill: #90CAF9;
 }
+
+/* Additional CSS styles - Add these to your statisticsstyle.css file */
+
+/* Date Picker Styles */
+.date-picker {
+    -fx-background-color: white;
+    -fx-border-color: #d1d9e0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-padding: 6 12 6 12;
+    -fx-font-size: 12px;
+    -fx-pref-width: 140px;
+}
+
+.date-picker:focused {
+    -fx-border-color: #1976d2;
+    -fx-border-width: 2px;
+}
+
+.date-picker .arrow-button {
+    -fx-background-color: #1976d2;
+    -fx-background-radius: 0 4 4 0;
+}
+
+.date-picker .arrow-button .arrow {
+    -fx-background-color: white;
+}
+
+.date-picker-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #666666;
+    -fx-font-weight: bold;
+}
+
+/* Date picker popup styling */
+.date-picker-popup {
+    -fx-background-color: white;
+    -fx-border-color: #d1d9e0;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 4);
+}
+
+.date-picker-popup .month-year-pane {
+    -fx-background-color: #1976d2;
+}
+
+.date-picker-popup .month-year-pane .label {
+    -fx-text-fill: white;
+}
+
+.date-picker-popup .day-cell {
+    -fx-background-color: white;
+    -fx-text-fill: #333333;
+}
+
+.date-picker-popup .day-cell:hover {
+    -fx-background-color: #e3f2fd;
+}
+
+.date-picker-popup .selected {
+    -fx-background-color: #1976d2;
+    -fx-text-fill: white;
+}
+
+.date-picker-popup .today {
+    -fx-text-fill: #1976d2;
+    -fx-font-weight: bold;
+}

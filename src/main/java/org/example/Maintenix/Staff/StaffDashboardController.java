@@ -32,10 +32,12 @@ public class StaffDashboardController implements Initializable {
     @FXML private Button dashboardBtn;
     @FXML private Button devicesBtn;
     @FXML private Button historyBtn;
-    @FXML private Button usageBtn;
+
     @FXML private Button profileBtn;
     @FXML private Button signOutBtn;
-    @FXML private Button reportIssueBtn, requestBtn;
+    @FXML private Button reportIssueBtn;
+    @FXML
+    private Button requestBtn;
     @FXML private Label welcomeLabel;
 
     // Card elements for the three device status cards
@@ -192,7 +194,7 @@ public class StaffDashboardController implements Initializable {
         dashboardBtn.setOnAction(e -> handleDashboardClick());
         devicesBtn.setOnAction(e -> handleDevicesClick());
         historyBtn.setOnAction(e -> handleHistoryClick());
-        usageBtn.setOnAction(e -> handleUsageClick());
+
         profileBtn.setOnAction(e -> handleProfileClick());
         signOutBtn.setOnAction(e -> handleSignOutClick());
         reportIssueBtn.setOnAction(e -> handleReportIssueClick());
@@ -205,7 +207,7 @@ public class StaffDashboardController implements Initializable {
 
     private void setActiveNavButton(Button activeButton) {
         // Remove active class from all nav buttons
-        Button[] navButtons = {dashboardBtn, devicesBtn, historyBtn, usageBtn, profileBtn, signOutBtn};
+        Button[] navButtons = {dashboardBtn, devicesBtn, historyBtn,  profileBtn, signOutBtn};
 
         for (Button button : navButtons) {
             button.getStyleClass().removeAll("nav-active");
@@ -272,12 +274,7 @@ public class StaffDashboardController implements Initializable {
         }
     }
 
-    private void handleUsageClick() {
-        setActiveNavButton(usageBtn);
-        System.out.println("Usage selected");
-        // Add navigation logic here
-        showInfoDialog("Usage", "Navigate to Usage page");
-    }
+
 
     private void handleProfileClick() {
         setActiveNavButton(profileBtn);

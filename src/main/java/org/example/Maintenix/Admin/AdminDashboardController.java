@@ -47,7 +47,7 @@ public class AdminDashboardController implements Initializable {
     // Navigation buttons
     @FXML private Button dashboardBtn;
     @FXML private Button statisticsBtn;
-    @FXML private Button notificationsBtn;
+
     @FXML private Button logoutBtn;
 
     // Device Request Table
@@ -55,6 +55,8 @@ public class AdminDashboardController implements Initializable {
     @FXML private TableColumn<DeviceRequest, String> deviceCol;
     @FXML private TableColumn<DeviceRequest, String> dateCol;
     @FXML private TableColumn<DeviceRequest, String> priorityCol;
+
+    @FXML private TableColumn<DeviceRequest, String> deviceActionCol;
 
     // Maintenance Request Table
     @FXML private TableView<MaintenanceRequest> maintenanceRequestTable;
@@ -65,9 +67,9 @@ public class AdminDashboardController implements Initializable {
 
     // Action buttons
     @FXML private Button printBtn1;
-    @FXML private Button shareBtn1;
+
     @FXML private Button printBtn2;
-    @FXML private Button shareBtn2;
+
     @FXML private Button historyBtn;
     @FXML private Button addUpdateBtn;
     @FXML private Hyperlink showAllLink;
@@ -367,8 +369,12 @@ public class AdminDashboardController implements Initializable {
                 if (priority == null) priority = "LOW";
 
                 String status = doc.getString("status");
+                if (status == null) status = "pending";
+
+                String action = mapStatusToAction(status);
                 if ("completed".equalsIgnoreCase(status)) {
                     priority = "Done";
+                    action = "Done";
                 }
 
                 ObjectId requestId = doc.getObjectId("_id");
@@ -379,6 +385,7 @@ public class AdminDashboardController implements Initializable {
                         dateStr,
                         timeStr,
                         priority.toUpperCase(),
+                        action,
                         requestId.toString()
                 );
                 originalDeviceRequests.add(request);
@@ -693,6 +700,7 @@ public class AdminDashboardController implements Initializable {
         deviceCol.setCellValueFactory(new PropertyValueFactory<>("device"));
         dateCol.setCellValueFactory(new PropertyValueFactory<>("dateTime"));
         priorityCol.setCellValueFactory(new PropertyValueFactory<>("priority"));
+        deviceActionCol.setCellValueFactory(new PropertyValueFactory<>("action"));
 
         // Custom cell factory for device column to show device name and requester
         deviceCol.setCellFactory(new Callback<TableColumn<DeviceRequest, String>, TableCell<DeviceRequest, String>>() {
@@ -778,9 +786,42 @@ public class AdminDashboardController implements Initializable {
             }
         });
 
+        // Custom cell factory for action column
+        deviceActionCol.setCellFactory(new Callback<TableColumn<DeviceRequest, String>, TableCell<DeviceRequest, String>>() {
+            @Override
+            public TableCell<DeviceRequest, String> call(TableColumn<DeviceRequest, String> param) {
+                return new TableCell<DeviceRequest, String>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setText(null);
+                            setStyle("");
+                        } else {
+                            setText(item);
+                            getStyleClass().removeAll("status-done", "status-idle", "status-pending", "status-rejected");
+                            switch (item.toUpperCase()) {
+                                case "DONE":
+                                    getStyleClass().add("status-done");
+                                    break;
+                                case "REJECTED":
+                                    getStyleClass().add("status-rejected");
+                                    break;
+                                case "IDLE":
+                                    getStyleClass().add("status-idle");
+                                    break;
+                                case "PENDING":
+                                    getStyleClass().add("status-pending");
+                                    break;
+                            }
+                        }
+                    }
+                };
+            }
+        });
+
         deviceRequestTable.setItems(deviceRequests);
     }
-
     private void setupMaintenanceRequestTable() {
         mainDeviceCol.setCellValueFactory(new PropertyValueFactory<>("device"));
         mainDateCol.setCellValueFactory(new PropertyValueFactory<>("dateTime"));
@@ -906,14 +947,13 @@ public class AdminDashboardController implements Initializable {
         // Navigation buttons
         dashboardBtn.setOnAction(e -> handleDashboardClick());
         statisticsBtn.setOnAction(e -> handleStatisticsClick());
-        notificationsBtn.setOnAction(e -> handleNotificationsClick());
         logoutBtn.setOnAction(e -> handleLogoutClick());
 
         // Action buttons
         printBtn1.setOnAction(e -> exportDeviceRequestsToCSV());
-        shareBtn1.setOnAction(e -> handleShareDeviceRequests());
+
         printBtn2.setOnAction(e -> exportMaintenanceRequestsToCSV());
-        shareBtn2.setOnAction(e -> handleShareMaintenanceRequests());
+
         historyBtn.setOnAction(e -> handleHistoryClick());
         addUpdateBtn.setOnAction(e -> handleAddUpdateClick());
         showAllLink.setOnAction(e -> handleShowAllRequestsClick());
@@ -933,7 +973,7 @@ public class AdminDashboardController implements Initializable {
         if (file != null) {
             try (FileWriter writer = new FileWriter(file)) {
                 // Write header
-                writer.append("Device,Requester,Date,Time,Priority\n");
+                writer.append("Device,Staff,Date,Time,Priority\n");
 
                 // Write data
                 for (DeviceRequest request : deviceRequests) {
@@ -968,7 +1008,7 @@ public class AdminDashboardController implements Initializable {
         if (file != null) {
             try (FileWriter writer = new FileWriter(file)) {
                 // Write header
-                writer.append("Issue,Reporter,Date,Time,Priority,Status\n");
+                writer.append("Issue,Staff,Date,Time,Priority,Status\n");
 
                 // Write data
                 for (MaintenanceRequest request : maintenanceRequests) {
@@ -1011,11 +1051,7 @@ public class AdminDashboardController implements Initializable {
         updateActiveNavButton(statisticsBtn);
     }
 
-    private void handleNotificationsClick() {
-        System.out.println("Notifications clicked");
-        updateActiveNavButton(notificationsBtn);
-        // Navigate to notifications view - implement navigation logic here
-    }
+
 
     private void handleLogoutClick() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -1037,15 +1073,8 @@ public class AdminDashboardController implements Initializable {
         }
     }
 
-    private void handleShareDeviceRequests() {
-        showAlert(Alert.AlertType.INFORMATION, "Share",
-                "Share functionality for device requests - implement sharing logic here");
-    }
 
-    private void handleShareMaintenanceRequests() {
-        showAlert(Alert.AlertType.INFORMATION, "Share",
-                "Share functionality for maintenance requests - implement sharing logic here");
-    }
+
 
     private void handleHistoryClick() {
         System.out.println("History clicked - Opening all device requests window");
@@ -1060,7 +1089,7 @@ public class AdminDashboardController implements Initializable {
         // Remove active class from all nav buttons
         dashboardBtn.getStyleClass().remove("nav-active");
         statisticsBtn.getStyleClass().remove("nav-active");
-        notificationsBtn.getStyleClass().remove("nav-active");
+
 
         // Add active class to clicked button
         activeButton.getStyleClass().add("nav-active");
@@ -1080,20 +1109,23 @@ public class AdminDashboardController implements Initializable {
             TableColumn<DeviceRequest, String> allDeviceCol = new TableColumn<>("Device");
             TableColumn<DeviceRequest, String> allDateCol = new TableColumn<>("Date/Time");
             TableColumn<DeviceRequest, String> allPriorityCol = new TableColumn<>("Priority");
+            TableColumn<DeviceRequest, String> allActionCol = new TableColumn<>("Status");
 
             allDeviceCol.setCellValueFactory(new PropertyValueFactory<>("device"));
             allDateCol.setCellValueFactory(new PropertyValueFactory<>("dateTime"));
             allPriorityCol.setCellValueFactory(new PropertyValueFactory<>("priority"));
+            allActionCol.setCellValueFactory(new PropertyValueFactory<>("action"));
 
             // Set column widths
-            allDeviceCol.setPrefWidth(250);
-            allDateCol.setPrefWidth(150);
-            allPriorityCol.setPrefWidth(100);
+            allDeviceCol.setPrefWidth(200);
+            allDateCol.setPrefWidth(120);
+            allPriorityCol.setPrefWidth(80);
+            allActionCol.setPrefWidth(80);
 
             // Apply same cell factories as main table
-            setupDeviceColumnCellFactories(allDeviceCol, allDateCol, allPriorityCol);
+            setupDeviceColumnCellFactories(allDeviceCol, allDateCol, allPriorityCol, allActionCol);
 
-            allDeviceTable.getColumns().addAll(allDeviceCol, allDateCol, allPriorityCol);
+            allDeviceTable.getColumns().addAll(allDeviceCol, allDateCol, allPriorityCol, allActionCol);
 
             // Load all device requests (no limit)
             ObservableList<DeviceRequest> allDeviceRequests = FXCollections.observableArrayList();
@@ -1172,7 +1204,8 @@ public class AdminDashboardController implements Initializable {
     // Helper methods to setup cell factories for the new tables
     private void setupDeviceColumnCellFactories(TableColumn<DeviceRequest, String> deviceCol,
                                                 TableColumn<DeviceRequest, String> dateCol,
-                                                TableColumn<DeviceRequest, String> priorityCol) {
+                                                TableColumn<DeviceRequest, String> priorityCol,
+                                                TableColumn<DeviceRequest, String> actionCol) {
         // Same cell factory as main table for device column
         deviceCol.setCellFactory(param -> new TableCell<DeviceRequest, String>() {
             @Override
@@ -1236,6 +1269,35 @@ public class AdminDashboardController implements Initializable {
                             break;
                         case "DONE":
                             getStyleClass().add("status-done");
+                            break;
+                    }
+                }
+            }
+        });
+
+        // Add action column cell factory
+        actionCol.setCellFactory(param -> new TableCell<DeviceRequest, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item);
+                    getStyleClass().removeAll("status-done", "status-idle", "status-pending", "status-rejected");
+                    switch (item.toUpperCase()) {
+                        case "DONE":
+                            getStyleClass().add("status-done");
+                            break;
+                        case "REJECTED":
+                            getStyleClass().add("status-rejected");
+                            break;
+                        case "IDLE":
+                            getStyleClass().add("status-idle");
+                            break;
+                        case "PENDING":
+                            getStyleClass().add("status-pending");
                             break;
                     }
                 }
@@ -1357,16 +1419,25 @@ public class AdminDashboardController implements Initializable {
         private final SimpleStringProperty priority;
         private final SimpleStringProperty dateTime;
         private final String requestId;
+        // Add this field to the DeviceRequest class
+        private final SimpleStringProperty action;
 
-        public DeviceRequest(String device, String requester, String date, String time, String priority, String requestId) {
+        // Update the constructor to include action parameter
+        public DeviceRequest(String device, String requester, String date, String time, String priority, String action, String requestId) {
             this.device = new SimpleStringProperty(device);
             this.requester = new SimpleStringProperty(requester);
             this.date = new SimpleStringProperty(date);
             this.time = new SimpleStringProperty(time);
             this.priority = new SimpleStringProperty(priority);
+            this.action = new SimpleStringProperty(action);
             this.dateTime = new SimpleStringProperty(date + " " + time);
             this.requestId = requestId;
         }
+
+        // Add these getter/setter methods
+        public String getAction() { return action.get(); }
+        public void setAction(String action) { this.action.set(action); }
+        public SimpleStringProperty actionProperty() { return action; }
 
         public String getDevice() { return device.get(); }
         public void setDevice(String device) { this.device.set(device); }

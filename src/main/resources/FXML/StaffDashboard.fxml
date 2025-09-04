@@ -35,8 +35,7 @@
                     <children>
                         <Button fx:id="dashboardBtn" styleClass="nav-item,nav-active" text="📊 Overview" />
                         <Button fx:id="devicesBtn" styleClass="nav-item" text="📱 Devices" />
-                        <Button fx:id="historyBtn" styleClass="nav-item" text="⚙️ History" />
-                        <Button fx:id="usageBtn" styleClass="nav-item2" text="" />
+                        <Button fx:id="historyBtn" styleClass="nav-item" text="📋  History" />
                     </children>
                 </VBox>
 
@@ -182,64 +181,30 @@
                                 </children>
                             </VBox>
 
-                            <!-- Updates Card -->
-                            <VBox styleClass="status-card,updates-card" GridPane.columnIndex="0" GridPane.rowIndex="1">
+
+
+                            <!-- Equipment Request Card -->
+                            <VBox styleClass="status-card,request-card" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="1">
                                 <children>
-                                    <Label styleClass="card-title" text="Updates">
-                                        <font>
-                                            <Font name="System Bold" size="20.0" />
-                                        </font>
-                                    </Label>
-                                    <VBox styleClass="update-content" alignment="CENTER" VBox.vgrow="ALWAYS">
+                                    <VBox alignment="CENTER" spacing="15.0" VBox.vgrow="ALWAYS">
                                         <children>
-                                            <ImageView fitHeight="80.0" fitWidth="80.0" preserveRatio="true">
-                                                <image>
-                                                    <Image url="@/images/logo.png" />
-                                                </image>
-                                            </ImageView>
-                                            <Label styleClass="update-text" text="UPDATE">
+                                            <Label styleClass="request-title" text="Submit Equipment Request">
                                                 <font>
-                                                    <Font name="System Bold" size="24.0" />
+                                                    <Font name="System Bold" size="22.0" />
                                                 </font>
                                             </Label>
-                                            <Label styleClass="update-time" text="12:00Am">
+                                            <Label styleClass="request-subtitle" text="Request new equipment or devices for your workspace" />
+                                            <Button fx:id="requestBtn" onAction="#requestDevice" styleClass="request-btn-main" text="Submit Request">
                                                 <font>
-                                                    <Font size="14.0" />
+                                                    <Font name="System Bold" size="14.0" />
                                                 </font>
-                                            </Label>
-                                            <Label styleClass="update-action" text="Reboot">
-                                                <font>
-                                                    <Font name="System Bold" size="16.0" />
-                                                </font>
-                                            </Label>
+                                            </Button>
                                         </children>
                                     </VBox>
                                 </children>
-                            </VBox>
-
-                            <!-- AC and Fan Card -->
-                            <VBox styleClass="status-card,ac-fan-card" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
-                                <children>
-                                    <HBox alignment="CENTER_LEFT">
-                                        <children>
-                                            <VBox HBox.hgrow="ALWAYS">
-                                                <children>
-                                                    <Label text="Request New Device" styleClass="card-title"/>
-
-                                                    <!-- Request Button Container -->
-                                                    <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                                        <children>
-                                                            <Button fx:id="requestBtn" onAction="#requestDevice" styleClass="request-btn" text="Request" />
-                                                        </children>
-                                                        <VBox.margin>
-                                                            <Insets bottom="10.0" top="40.0" />
-                                                        </VBox.margin>
-                                                    </HBox>
-                                                </children>
-                                            </VBox>
-                                        </children>
-                                    </HBox>
-                                </children>
+                                <VBox.margin>
+                                    <Insets />
+                                </VBox.margin>
                             </VBox>
 
                         </GridPane>

@@ -31,7 +31,7 @@
                     <children>
                         <Button fx:id="dashboardBtn" text="📊 Dashboard" styleClass="nav-button" maxWidth="Infinity" />
                         <Button fx:id="statisticsBtn" text="📈 Statistics" styleClass="nav-button, nav-active" maxWidth="Infinity" />
-                        <Button fx:id="notificationsBtn" text="🔔 Notifications" styleClass="nav-button" maxWidth="Infinity" />
+
                     </children>
                     <padding>
                         <Insets left="10.0" right="10.0" />
@@ -74,9 +74,9 @@
                 <!-- Content Area -->
                 <ScrollPane fitToWidth="true" styleClass="content-scroll">
                     <content>
-                        <VBox spacing="20.0">
+                        <VBox spacing="15.0">
                             <children>
-                                <!-- Period Selection -->
+                                <!-- Period Selection Buttons -->
                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
                                     <children>
                                         <Label styleClass="period-label" text="Select period:" />
